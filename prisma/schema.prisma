@@ -1,0 +1,126 @@
+// Prisma Schema for SelfJournal
+// Supports both SQLite (Railway/Docker) and PostgreSQL (Vercel/Supabase)
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite" // Change to "postgresql" for Vercel/Supabase
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            Int            @id @default(autoincrement())
+  username      String         @unique
+  passwordHash  String         @map("password_hash")
+  createdAt     DateTime       @default(now()) @map("created_at")
+  entries       Entry[]
+  collections   Collection[]
+  moods         Mood[]
+  moodEntries   MoodEntry[]    @relation("UserMoodEntries")
+
+  @@map("users")
+}
+
+model Entry {
+  id        Int      @id @default(autoincrement())
+  userId    Int      @map("user_id")
+  date      String
+  type      String   // 'daily', 'weekly', 'monthly', 'collection'
+  title     String?
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  tasks     Task[]
+
+  @@index([userId, date])
+  @@map("entries")
+}
+
+model Task {
+  id                Int               @id @default(autoincrement())
+  entryId           Int               @map("entry_id")
+  content           String
+  symbol            String            // 'bullet', 'complete', 'migrated', 'scheduled', 'note', 'event'
+  position          Int
+  isRecurring       Int               @default(0) @map("is_recurring")
+  recurrencePattern String?           @map("recurrence_pattern") // 'daily', 'weekly', 'monthly', 'yearly'
+  parentTaskId      Int?              @map("parent_task_id")
+  createdAt         DateTime          @default(now()) @map("created_at")
+  updatedAt         DateTime          @updatedAt @map("updated_at")
+  entry             Entry             @relation(fields: [entryId], references: [id], onDelete: Cascade)
+  parentTask        Task?             @relation("TaskRecurrence", fields: [parentTaskId], references: [id], onDelete: SetNull)
+  childTasks        Task[]            @relation("TaskRecurrence")
+  completions       TaskCompletion[]
+
+  @@index([entryId])
+  @@map("tasks")
+}
+
+model TaskCompletion {
+  id        Int      @id @default(autoincrement())
+  taskId    Int      @map("task_id")
+  date      String
+  completed Int      @default(1)
+  createdAt DateTime @default(now()) @map("created_at")
+  task      Task     @relation(fields: [taskId], references: [id], onDelete: Cascade)
+
+  @@unique([taskId, date])
+  @@index([taskId, date])
+  @@map("task_completions")
+}
+
+model Collection {
+  id          Int              @id @default(autoincrement())
+  userId      Int              @map("user_id")
+  name        String
+  description String?
+  createdAt   DateTime         @default(now()) @map("created_at")
+  user        User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  items       CollectionItem[]
+
+  @@index([userId])
+  @@map("collections")
+}
+
+model CollectionItem {
+  id           Int        @id @default(autoincrement())
+  collectionId Int        @map("collection_id")
+  content      String
+  symbol       String
+  position     Int
+  createdAt    DateTime   @default(now()) @map("created_at")
+  collection   Collection @relation(fields: [collectionId], references: [id], onDelete: Cascade)
+
+  @@map("collection_items")
+}
+
+model Mood {
+  id        Int      @id @default(autoincrement())
+  userId    Int      @map("user_id")
+  date      String
+  mood      String   // 'amazing', 'good', 'okay', 'bad', 'terrible'
+  note      String?
+  createdAt DateTime @default(now()) @map("created_at")
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, date])
+  @@index([userId, date])
+  @@map("moods")
+}
+
+model MoodEntry {
+  id        Int      @id @default(autoincrement())
+  userId    Int      @map("user_id")
+  date      String
+  time      String
+  mood      String   // 'amazing', 'good', 'okay', 'bad', 'terrible'
+  note      String?
+  createdAt DateTime @default(now()) @map("created_at")
+  user      User     @relation("UserMoodEntries", fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, date])
+  @@index([userId, date, time])
+  @@map("mood_entries")
+}

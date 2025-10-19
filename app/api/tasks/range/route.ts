@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { auth } from '@/lib/auth';
-import db from '@/lib/db';
+import { prisma } from '@/lib/db';
 
 export async function GET(request: Request) {
   const session = await auth();
@@ -21,16 +21,39 @@ export async function GET(request: Request) {
 
   try {
     // Get all entries in the date range for the user
-    const tasks = db.prepare(`
-      SELECT t.*, e.date, e.type as entry_type
-      FROM tasks t
-      JOIN entries e ON t.entry_id = e.id
-      WHERE e.user_id = ?
-        AND e.date >= ?
-        AND e.date <= ?
-        ${type ? 'AND e.type = ?' : ''}
-      ORDER BY e.date ASC, t.position ASC
-    `).all(type ? [userId, startDate, endDate, type] : [userId, startDate, endDate]);
+    type TaskWithEntry = {
+      id: number;
+      entry_id: number;
+      content: string;
+      symbol: string;
+      position: number;
+      is_recurring: number;
+      recurrence_pattern: string | null;
+      parent_task_id: number | null;
+      date: string;
+      entry_type: string;
+    };
+
+    const tasks = type
+      ? await prisma.$queryRaw<TaskWithEntry[]>`
+          SELECT t.*, e.date, e.type as entry_type
+          FROM tasks t
+          JOIN entries e ON t.entry_id = e.id
+          WHERE e.user_id = ${userId}
+            AND e.date >= ${startDate}
+            AND e.date <= ${endDate}
+            AND e.type = ${type}
+          ORDER BY e.date ASC, t.position ASC
+        `
+      : await prisma.$queryRaw<TaskWithEntry[]>`
+          SELECT t.*, e.date, e.type as entry_type
+          FROM tasks t
+          JOIN entries e ON t.entry_id = e.id
+          WHERE e.user_id = ${userId}
+            AND e.date >= ${startDate}
+            AND e.date <= ${endDate}
+          ORDER BY e.date ASC, t.position ASC
+        `;
 
     return NextResponse.json(tasks);
   } catch (error) {

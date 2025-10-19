@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { auth } from '@/lib/auth';
-import db from '@/lib/db';
+import { prisma } from '@/lib/db';
 
 export async function GET() {
   try {
@@ -12,85 +12,91 @@ export async function GET() {
     const userId = parseInt(session.user.id);
 
     // Total de tasks por símbolo
-    const tasksBySymbol = db.prepare(`
+    const tasksBySymbol = await prisma.$queryRaw<{ symbol: string; count: bigint }[]>`
       SELECT
         t.symbol,
         COUNT(*) as count
       FROM tasks t
       INNER JOIN entries e ON t.entry_id = e.id
-      WHERE e.user_id = ?
+      WHERE e.user_id = ${userId}
       GROUP BY t.symbol
-    `).all(userId) as { symbol: string; count: number }[];
+    `;
 
     // Total de tasks
-    const totalTasks = db.prepare(`
+    const totalTasksResult = await prisma.$queryRaw<{ count: bigint }[]>`
       SELECT COUNT(*) as count
       FROM tasks t
       INNER JOIN entries e ON t.entry_id = e.id
-      WHERE e.user_id = ?
-    `).get(userId) as { count: number };
+      WHERE e.user_id = ${userId}
+    `;
+    const totalTasks = totalTasksResult[0];
 
     // Tasks completadas
-    const completedTasks = db.prepare(`
+    const completedTasksResult = await prisma.$queryRaw<{ count: bigint }[]>`
       SELECT COUNT(*) as count
       FROM tasks t
       INNER JOIN entries e ON t.entry_id = e.id
-      WHERE e.user_id = ? AND t.symbol = 'complete'
-    `).get(userId) as { count: number };
+      WHERE e.user_id = ${userId} AND t.symbol = 'complete'
+    `;
+    const completedTasks = completedTasksResult[0];
 
     // Tasks migradas
-    const migratedTasks = db.prepare(`
+    const migratedTasksResult = await prisma.$queryRaw<{ count: bigint }[]>`
       SELECT COUNT(*) as count
       FROM tasks t
       INNER JOIN entries e ON t.entry_id = e.id
-      WHERE e.user_id = ? AND t.symbol = 'migrated'
-    `).get(userId) as { count: number };
+      WHERE e.user_id = ${userId} AND t.symbol = 'migrated'
+    `;
+    const migratedTasks = migratedTasksResult[0];
 
     // Total de entries por tipo
-    const entriesByType = db.prepare(`
+    const entriesByType = await prisma.$queryRaw<{ type: string; count: bigint }[]>`
       SELECT
         type,
         COUNT(*) as count
       FROM entries
-      WHERE user_id = ?
+      WHERE user_id = ${userId}
       GROUP BY type
-    `).all(userId) as { type: string; count: number }[];
+    `;
 
     // Total de collections
-    const totalCollections = db.prepare(`
+    const totalCollectionsResult = await prisma.$queryRaw<{ count: bigint }[]>`
       SELECT COUNT(*) as count
       FROM collections
-      WHERE user_id = ?
-    `).get(userId) as { count: number };
+      WHERE user_id = ${userId}
+    `;
+    const totalCollections = totalCollectionsResult[0];
 
     // Atividade dos últimos 30 dias
-    const recentActivity = db.prepare(`
+    const recentActivity = await prisma.$queryRaw<{ date: string; entries: bigint; tasks: bigint }[]>`
       SELECT
         DATE(e.created_at) as date,
         COUNT(DISTINCT e.id) as entries,
         COUNT(t.id) as tasks
       FROM entries e
       LEFT JOIN tasks t ON t.entry_id = e.id
-      WHERE e.user_id = ?
+      WHERE e.user_id = ${userId}
         AND e.created_at >= datetime('now', '-30 days')
       GROUP BY DATE(e.created_at)
       ORDER BY date DESC
       LIMIT 30
-    `).all(userId) as { date: string; entries: number; tasks: number }[];
+    `;
 
     // Taxa de conclusão (completion rate)
-    const completionRate = totalTasks.count > 0
-      ? Math.round((completedTasks.count / totalTasks.count) * 100)
+    const totalCount = Number(totalTasks.count);
+    const completedCount = Number(completedTasks.count);
+    const completionRate = totalCount > 0
+      ? Math.round((completedCount / totalCount) * 100)
       : 0;
 
     // Streak (dias consecutivos com entradas)
-    const streakData = db.prepare(`
+    const streakData = await prisma.$queryRaw<{ date: string }[]>`
       SELECT DISTINCT DATE(created_at) as date
       FROM entries
-      WHERE user_id = ?
+      WHERE user_id = ${userId}
       ORDER BY date DESC
       LIMIT 365
-    `).all(userId) as { date: string }[];
+    `;
 
     let currentStreak = 0;
     let longestStreak = 0;
@@ -128,68 +134,76 @@ export async function GET() {
     }
 
     // Mood data dos últimos 30 dias
-    const moodData = db.prepare(`
+    const moodData = await prisma.$queryRaw<{ date: string; mood: string }[]>`
       SELECT
         date,
         mood
       FROM moods
-      WHERE user_id = ?
+      WHERE user_id = ${userId}
         AND date >= date('now', '-30 days')
       ORDER BY date DESC
-    `).all(userId) as { date: string; mood: string }[];
+    `;
 
     // Mood distribution
-    const moodDistribution = db.prepare(`
+    const moodDistribution = await prisma.$queryRaw<{ mood: string; count: bigint }[]>`
       SELECT
         mood,
         COUNT(*) as count
       FROM moods
-      WHERE user_id = ?
+      WHERE user_id = ${userId}
       GROUP BY mood
-    `).all(userId) as { mood: string; count: number }[];
+    `;
 
     // Produtividade ao longo do tempo (tarefas completadas por dia nos últimos 30 dias)
-    const productivityTimeline = db.prepare(`
+    const productivityTimeline = await prisma.$queryRaw<{ date: string; completed: bigint; total: bigint }[]>`
       SELECT
         e.date,
         COUNT(CASE WHEN t.symbol = 'complete' THEN 1 END) as completed,
         COUNT(t.id) as total
       FROM entries e
       LEFT JOIN tasks t ON t.entry_id = e.id
-      WHERE e.user_id = ?
+      WHERE e.user_id = ${userId}
         AND e.type = 'daily'
         AND e.date >= date('now', '-30 days')
       GROUP BY e.date
       ORDER BY e.date ASC
-    `).all(userId) as { date: string; completed: number; total: number }[];
+    `;
 
     return NextResponse.json({
       overview: {
-        totalTasks: totalTasks.count,
-        completedTasks: completedTasks.count,
-        migratedTasks: migratedTasks.count,
+        totalTasks: Number(totalTasks.count),
+        completedTasks: Number(completedTasks.count),
+        migratedTasks: Number(migratedTasks.count),
         completionRate,
-        totalCollections: totalCollections.count,
+        totalCollections: Number(totalCollections.count),
       },
       tasksBySymbol: tasksBySymbol.reduce((acc, curr) => {
-        acc[curr.symbol] = curr.count;
+        acc[curr.symbol] = Number(curr.count);
         return acc;
       }, {} as Record<string, number>),
       entriesByType: entriesByType.reduce((acc, curr) => {
-        acc[curr.type] = curr.count;
+        acc[curr.type] = Number(curr.count);
         return acc;
       }, {} as Record<string, number>),
-      recentActivity,
+      recentActivity: recentActivity.map(r => ({
+        date: r.date,
+        entries: Number(r.entries),
+        tasks: Number(r.tasks),
+      })),
       streaks: {
         current: currentStreak,
         longest: longestStreak,
       },
       moods: moodData,
       moodDistribution: moodDistribution.reduce((acc, curr) => {
-        acc[curr.mood] = curr.count;
+        acc[curr.mood] = Number(curr.count);
         return acc;
       }, {} as Record<string, number>),
-      productivityTimeline,
+      productivityTimeline: productivityTimeline.map(p => ({
+        date: p.date,
+        completed: Number(p.completed),
+        total: Number(p.total),
+      })),
     });
   } catch (error) {
     console.error('Stats error:', error);

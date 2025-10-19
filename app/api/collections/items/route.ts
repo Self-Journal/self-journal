@@ -9,16 +9,20 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    const { collectionId, content, symbol, position } = await request.json();
+    const body = await request.json();
+    const { collectionId, content, symbol, position } = body;
+
+    console.log('POST /api/collections/items - Body:', body);
 
     if (!collectionId || !content || !symbol || position === undefined) {
+      console.error('Validation failed:', { collectionId, content, symbol, position });
       return NextResponse.json(
         { error: 'Collection ID, content, symbol, and position are required' },
         { status: 400 }
       );
     }
 
-    const result = collectionItemOperations.create(collectionId, content, symbol, position);
+    const result = await collectionItemOperations.create(collectionId, content, symbol, position);
 
     return NextResponse.json(
       { id: result.lastInsertRowid },
@@ -49,7 +53,7 @@ export async function PUT(request: Request) {
       );
     }
 
-    collectionItemOperations.update(id, content, symbol);
+    await collectionItemOperations.update(id, content, symbol);
 
     return NextResponse.json({ success: true });
   } catch (error) {
@@ -78,7 +82,7 @@ export async function DELETE(request: Request) {
       );
     }
 
-    collectionItemOperations.delete(parseInt(id));
+    await collectionItemOperations.delete(parseInt(id));
 
     return NextResponse.json({ success: true });
   } catch (error) {

@@ -20,7 +20,7 @@ export async function PATCH(request: NextRequest) {
 
     // If recurrencePattern is provided, set recurring, otherwise remove it
     const isRecurring = recurrencePattern ? 1 : 0;
-    taskOperations.setRecurring(taskId, isRecurring, recurrencePattern || null);
+    await taskOperations.setRecurring(taskId, isRecurring, recurrencePattern || null);
 
     return NextResponse.json({ success: true, isRecurring, recurrencePattern });
   } catch (error) {

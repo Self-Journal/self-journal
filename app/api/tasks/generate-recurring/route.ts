@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { auth } from '@/lib/auth';
 import { taskOperations, entryOperations } from '@/lib/db';
-import { addDays, addWeeks, addMonths, addYears, format, parseISO } from 'date-fns';
+import { parseISO } from 'date-fns';
 
 export async function POST(request: NextRequest) {
   try {
@@ -18,27 +18,27 @@ export async function POST(request: NextRequest) {
     const userId = parseInt(session.user.id);
 
     // Get or create entry for the target date
-    let entry = entryOperations.findByUserAndDate(userId, date, 'daily');
+    let entry = await entryOperations.findByUserAndDate(userId, date, 'daily');
     if (!entry) {
-      const result = entryOperations.create(userId, date, 'daily');
-      entry = { id: result.lastInsertRowid as number, user_id: userId, date, type: 'daily' };
+      const result = await entryOperations.create(userId, date, 'daily');
+      entry = { id: result.lastInsertRowid as number, userId, date, type: 'daily', title: null, createdAt: new Date(), updatedAt: new Date() };
     }
 
     // Find all recurring tasks from the user
-    const allEntries = entryOperations.findByUser(userId) as Array<{id: number; user_id: number; date: string; type: string}>;
-    const recurringTasks: Array<{id: number; content: string; is_recurring: number; recurrence_pattern: string; entryDate: string; parent_task_id?: number}> = [];
+    const allEntries = await entryOperations.findByUser(userId);
+    const recurringTasks: Array<{id: number; content: string; isRecurring: number; recurrencePattern: string; entryDate: string; parentTaskId?: number | null}> = [];
 
     for (const userEntry of allEntries) {
-      const tasks = taskOperations.findByEntry(userEntry.id) as Array<{id: number; content: string; symbol: string; is_recurring: number; recurrence_pattern?: string; parent_task_id?: number}>;
+      const tasks = await taskOperations.findByEntry(userEntry.id);
       for (const task of tasks) {
-        if (task.is_recurring === 1 && task.recurrence_pattern) {
+        if (task.isRecurring === 1 && task.recurrencePattern) {
           recurringTasks.push({
             id: task.id,
             content: task.content,
-            is_recurring: task.is_recurring,
-            recurrence_pattern: task.recurrence_pattern,
+            isRecurring: task.isRecurring,
+            recurrencePattern: task.recurrencePattern,
             entryDate: userEntry.date,
-            parent_task_id: task.parent_task_id,
+            parentTaskId: task.parentTaskId,
           });
         }
       }
@@ -53,7 +53,7 @@ export async function POST(request: NextRequest) {
       let shouldCreate = false;
 
       // Check if task should appear on target date based on recurrence pattern
-      switch (recurringTask.recurrence_pattern) {
+      switch (recurringTask.recurrencePattern) {
         case 'daily':
           // Create every day after the original task date
           shouldCreate = targetDate >= taskDate;
@@ -83,29 +83,29 @@ export async function POST(request: NextRequest) {
 
       if (shouldCreate) {
         // Check if this task instance already exists for this date
-        const existingTasks = taskOperations.findByEntry(entry.id) as Array<{id: number; content: string; parent_task_id?: number}>;
+        const existingTasks = await taskOperations.findByEntry(entry.id);
         const alreadyExists = existingTasks.some(
           (t) => t.content === recurringTask.content &&
-                     (t.parent_task_id === recurringTask.id || t.parent_task_id === recurringTask.parent_task_id)
+                     (t.parentTaskId === recurringTask.id || t.parentTaskId === recurringTask.parentTaskId)
         );
 
         if (!alreadyExists) {
           // Create new instance of the recurring task
           const position = existingTasks.length;
-          const result = taskOperations.create(
+          const result = await taskOperations.create(
             entry.id,
             recurringTask.content,
             'bullet', // Reset to bullet (not complete) for new instance
             position,
             0, // Not recurring for instances
             null, // No recurrence pattern for instances
-            recurringTask.parent_task_id || recurringTask.id // Link to original task
+            recurringTask.parentTaskId || recurringTask.id // Link to original task
           );
 
           tasksCreated.push({
             id: Number(result.lastInsertRowid),
             content: recurringTask.content,
-            pattern: recurringTask.recurrence_pattern,
+            pattern: recurringTask.recurrencePattern,
           });
         }
       }

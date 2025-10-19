@@ -14,7 +14,7 @@ export async function GET(request: Request) {
     const type = searchParams.get('type');
 
     if (date && type) {
-      const entry = entryOperations.findByUserAndDate(
+      const entry = await entryOperations.findByUserAndDate(
         parseInt(session.user.id),
         date,
         type
@@ -22,7 +22,7 @@ export async function GET(request: Request) {
       return NextResponse.json(entry || null);
     }
 
-    const entries = entryOperations.findByUser(parseInt(session.user.id));
+    const entries = await entryOperations.findByUser(parseInt(session.user.id));
     return NextResponse.json(entries);
   } catch (error) {
     console.error('Get entries error:', error);
@@ -49,7 +49,7 @@ export async function POST(request: Request) {
       );
     }
 
-    const result = entryOperations.create(
+    const result = await entryOperations.create(
       parseInt(session.user.id),
       date,
       type,
@@ -85,7 +85,7 @@ export async function PUT(request: Request) {
       );
     }
 
-    entryOperations.update(id, title);
+    await entryOperations.update(id, title);
 
     return NextResponse.json({ success: true });
   } catch (error) {
@@ -114,7 +114,7 @@ export async function DELETE(request: Request) {
       );
     }
 
-    entryOperations.delete(parseInt(id));
+    await entryOperations.delete(parseInt(id));
 
     return NextResponse.json({ success: true });
   } catch (error) {

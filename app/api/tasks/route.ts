@@ -19,7 +19,7 @@ export async function GET(request: Request) {
       );
     }
 
-    const tasks = taskOperations.findByEntry(parseInt(entryId));
+    const tasks = await taskOperations.findByEntry(parseInt(entryId));
     return NextResponse.json(tasks);
   } catch (error) {
     console.error('Get tasks error:', error);
@@ -46,7 +46,7 @@ export async function POST(request: Request) {
       );
     }
 
-    const result = taskOperations.create(entryId, content, symbol, position, isRecurring, recurrencePattern, parentTaskId);
+    const result = await taskOperations.create(entryId, content, symbol, position, isRecurring, recurrencePattern, parentTaskId);
 
     return NextResponse.json(
       { id: result.lastInsertRowid },
@@ -77,7 +77,7 @@ export async function PUT(request: Request) {
       );
     }
 
-    taskOperations.update(id, content, symbol);
+    await taskOperations.update(id, content, symbol);
 
     return NextResponse.json({ success: true });
   } catch (error) {
@@ -106,7 +106,7 @@ export async function DELETE(request: Request) {
       );
     }
 
-    taskOperations.delete(parseInt(id));
+    await taskOperations.delete(parseInt(id));
 
     return NextResponse.json({ success: true });
   } catch (error) {

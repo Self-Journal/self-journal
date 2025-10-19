@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { auth } from '@/lib/auth';
-import db from '@/lib/db';
+import { moodEntryOperations } from '@/lib/db';
 
 export async function GET(request: Request) {
   const session = await auth();
@@ -15,21 +15,12 @@ export async function GET(request: Request) {
   try {
     if (date) {
       // Get all mood entries for specific date, ordered by time
-      const entries = db.prepare(`
-        SELECT * FROM mood_entries
-        WHERE user_id = ? AND date = ?
-        ORDER BY time ASC
-      `).all(userId, date);
+      const entries = await moodEntryOperations.findByDate(userId, date);
       return NextResponse.json(entries);
     }
 
-    // Get all recent mood entries (last 30 days)
-    const entries = db.prepare(`
-      SELECT * FROM mood_entries
-      WHERE user_id = ?
-      ORDER BY date DESC, time DESC
-      LIMIT 100
-    `).all(userId);
+    // Get all recent mood entries (last 100)
+    const entries = await moodEntryOperations.findRecent(userId, 100);
 
     return NextResponse.json(entries);
   } catch (error) {
@@ -55,12 +46,7 @@ export async function POST(request: Request) {
   }
 
   try {
-    const stmt = db.prepare(`
-      INSERT INTO mood_entries (user_id, date, time, mood, note)
-      VALUES (?, ?, ?, ?, ?)
-    `);
-
-    const result = stmt.run(userId, date, time, mood, note || null);
+    const result = await moodEntryOperations.create(userId, date, time, mood, note);
 
     return NextResponse.json({
       id: result.lastInsertRowid,
@@ -88,13 +74,13 @@ export async function DELETE(request: Request) {
 
   try {
     // Verify ownership before deleting
-    const entry = db.prepare('SELECT user_id FROM mood_entries WHERE id = ?').get(parseInt(id)) as any;
+    const entry = await moodEntryOperations.findById(parseInt(id));
 
-    if (!entry || entry.user_id !== userId) {
+    if (!entry || entry.userId !== userId) {
       return NextResponse.json({ error: 'Not authorized' }, { status: 403 });
     }
 
-    db.prepare('DELETE FROM mood_entries WHERE id = ?').run(parseInt(id));
+    await moodEntryOperations.delete(parseInt(id), userId);
 
     return NextResponse.json({ success: true });
   } catch (error) {

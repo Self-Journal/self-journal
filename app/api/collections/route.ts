@@ -13,11 +13,11 @@ export async function GET(request: Request) {
     const collectionId = searchParams.get('id');
 
     if (collectionId) {
-      const items = collectionItemOperations.findByCollection(parseInt(collectionId));
+      const items = await collectionItemOperations.findByCollection(parseInt(collectionId));
       return NextResponse.json(items);
     }
 
-    const collections = collectionOperations.findByUser(parseInt(session.user.id));
+    const collections = await collectionOperations.findByUser(parseInt(session.user.id));
     return NextResponse.json(collections);
   } catch (error) {
     console.error('Get collections error:', error);
@@ -44,7 +44,7 @@ export async function POST(request: Request) {
       );
     }
 
-    const result = collectionOperations.create(
+    const result = await collectionOperations.create(
       parseInt(session.user.id),
       name,
       description
@@ -79,7 +79,7 @@ export async function PUT(request: Request) {
       );
     }
 
-    collectionOperations.update(id, name, description);
+    await collectionOperations.update(id, name, description);
 
     return NextResponse.json({ success: true });
   } catch (error) {
@@ -108,7 +108,7 @@ export async function DELETE(request: Request) {
       );
     }
 
-    collectionOperations.delete(parseInt(id));
+    await collectionOperations.delete(parseInt(id));
 
     return NextResponse.json({ success: true });
   } catch (error) {

@@ -16,7 +16,7 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ error: 'Task ID required' }, { status: 400 });
     }
 
-    const task = taskOperations.findById(parseInt(taskId));
+    const task = await taskOperations.findById(parseInt(taskId));
 
     if (!task) {
       return NextResponse.json({ error: 'Task not found' }, { status: 404 });

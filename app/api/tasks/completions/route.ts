@@ -22,9 +22,9 @@ export async function GET(request: NextRequest) {
   try {
     let completions;
     if (startDate && endDate) {
-      completions = taskCompletionOperations.findByTaskAndDateRange(parseInt(taskId), startDate, endDate);
+      completions = await taskCompletionOperations.findByTaskAndDateRange(parseInt(taskId), startDate, endDate);
     } else {
-      completions = taskCompletionOperations.findByTask(parseInt(taskId));
+      completions = await taskCompletionOperations.findByTask(parseInt(taskId));
     }
     return NextResponse.json(completions);
   } catch (error) {
@@ -48,7 +48,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Task ID and date required' }, { status: 400 });
     }
 
-    const result = taskCompletionOperations.recordCompletion(taskId, date, completed);
+    const result = await taskCompletionOperations.recordCompletion(taskId, date, completed);
     return NextResponse.json({ id: result.lastInsertRowid, taskId, date, completed });
   } catch (error) {
     console.error('Error recording task completion:', error);
@@ -73,7 +73,7 @@ export async function DELETE(request: NextRequest) {
   }
 
   try {
-    taskCompletionOperations.delete(parseInt(taskId), date);
+    await taskCompletionOperations.delete(parseInt(taskId), date);
     return NextResponse.json({ success: true });
   } catch (error) {
     console.error('Error deleting task completion:', error);

@@ -22,27 +22,27 @@ interface MoodSelectorProps {
 
 const moodConfig: Record<MoodType, { icon: React.ReactNode; label: string; color: string }> = {
   amazing: {
-    icon: <SmilePlus className="w-6 h-6" />,
+    icon: <SmilePlus className="w-8 h-8" />,
     label: 'Amazing',
     color: 'text-green-600 dark:text-green-400'
   },
   good: {
-    icon: <Smile className="w-6 h-6" />,
+    icon: <Smile className="w-8 h-8" />,
     label: 'Good',
     color: 'text-blue-600 dark:text-blue-400'
   },
   okay: {
-    icon: <Meh className="w-6 h-6" />,
+    icon: <Meh className="w-8 h-8" />,
     label: 'Okay',
     color: 'text-yellow-600 dark:text-yellow-400'
   },
   bad: {
-    icon: <Frown className="w-6 h-6" />,
+    icon: <Frown className="w-8 h-8" />,
     label: 'Bad',
     color: 'text-orange-600 dark:text-orange-400'
   },
   terrible: {
-    icon: <Angry className="w-6 h-6" />,
+    icon: <Angry className="w-8 h-8" />,
     label: 'Terrible',
     color: 'text-red-600 dark:text-red-400'
   }
@@ -131,7 +131,7 @@ export default function MoodSelector({ moodEntries, onAddMood, onDeleteMood }: M
               How are you feeling right now?
             </span>
           </div>
-          <div className="flex gap-1 flex-wrap">
+          <div className="flex gap-1 justify-between">
             {(Object.keys(moodConfig) as MoodType[]).map((mood) => {
               const config = moodConfig[mood];
 
@@ -139,13 +139,13 @@ export default function MoodSelector({ moodEntries, onAddMood, onDeleteMood }: M
                 <button
                   key={mood}
                   onClick={() => handleMoodClick(mood)}
-                  className="flex flex-col items-center gap-1 p-2 rounded-lg transition-all hover:bg-muted"
+                  className="flex flex-col items-center gap-1 p-2 rounded-lg transition-all hover:bg-muted active:scale-95 flex-1"
                   title={config.label}
                 >
                   <div className={config.color}>
                     {config.icon}
                   </div>
-                  <span className="text-xs font-medium hidden sm:block">
+                  <span className="text-[10px] font-medium hidden sm:block">
                     {config.label}
                   </span>
                 </button>

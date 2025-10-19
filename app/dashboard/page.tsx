@@ -202,116 +202,88 @@ export default function DashboardPage() {
 
   return (
     <AppLayout showSidebar={true}>
-      <div className="w-full mx-auto py-8 px-6 flex-1">
+      <div className="container mx-auto max-w-7xl px-3 lg:px-4 py-6 lg:py-8 flex-1">
         <div className="space-y-8">
-          {/* Header */}
-          <div className="flex items-center justify-between">
-            <div>
-              <h1 className="text-3xl font-bold tracking-tight">Dashboard</h1>
-              <p className="text-muted-foreground mt-1">Track your productivity and progress</p>
-            </div>
+            {/* Header */}
+            <div className="flex items-center justify-between">
+              <div>
+                <h1 className="text-3xl font-bold tracking-tight">Dashboard</h1>
+                <p className="text-muted-foreground mt-1">Track your productivity and progress</p>
+              </div>
 
-            <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-              <DialogTrigger asChild>
-                <Button className="gap-2">
-                  <Plus className="h-4 w-4" />
-                  Add Task Today
-                </Button>
-              </DialogTrigger>
-              <DialogContent>
-                <DialogHeader>
-                  <DialogTitle>Add Task for Today</DialogTitle>
-                </DialogHeader>
-                <div className="space-y-4 pt-4">
-                  <div className="space-y-2">
-                    <label className="text-sm font-medium">Task</label>
-                    <Input
-                      value={taskInput}
-                      onChange={(e) => setTaskInput(e.target.value)}
-                      placeholder="Enter task..."
-                      onKeyDown={(e) => {
-                        if (e.key === 'Enter' && !addingTask) {
-                          handleAddTask();
-                        }
-                      }}
-                      autoFocus
-                    />
-                  </div>
+              <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+                <DialogTrigger asChild>
+                  <Button className="gap-2">
+                    <Plus className="h-4 w-4" />
+                    Add Task
+                  </Button>
+                </DialogTrigger>
+                <DialogContent>
+                  <DialogHeader>
+                    <DialogTitle>Add Task for Today</DialogTitle>
+                  </DialogHeader>
+                  <div className="space-y-4 pt-4">
+                    <div className="space-y-2">
+                      <label className="text-sm font-medium">Task</label>
+                      <Input
+                        value={taskInput}
+                        onChange={(e) => setTaskInput(e.target.value)}
+                        placeholder="Enter task..."
+                        onKeyDown={(e) => {
+                          if (e.key === 'Enter' && !addingTask) {
+                            handleAddTask();
+                          }
+                        }}
+                        autoFocus
+                      />
+                    </div>
 
-                  <div className="space-y-2">
-                    <label className="text-sm font-medium">Symbol</label>
-                    <div className="grid grid-cols-3 gap-2">
-                      {(Object.keys(symbolIcons) as TaskSymbol[]).map((symbol) => (
-                        <Button
-                          key={symbol}
-                          variant={selectedSymbol === symbol ? 'default' : 'outline'}
-                          className="gap-2 justify-start"
-                          onClick={() => setSelectedSymbol(symbol)}
-                        >
-                          <div className="flex items-center justify-center w-5 h-5">
-                            {symbolIcons[symbol]}
-                          </div>
-                          <span className="text-xs">{symbolLabelsMap[symbol]}</span>
-                        </Button>
-                      ))}
+                    <div className="space-y-2">
+                      <label className="text-sm font-medium">Symbol</label>
+                      <div className="grid grid-cols-3 gap-2">
+                        {(Object.keys(symbolIcons) as TaskSymbol[]).map((symbol) => (
+                          <Button
+                            key={symbol}
+                            variant={selectedSymbol === symbol ? 'default' : 'outline'}
+                            className="gap-2 justify-start"
+                            onClick={() => setSelectedSymbol(symbol)}
+                          >
+                            <div className="flex items-center justify-center w-5 h-5">
+                              {symbolIcons[symbol]}
+                            </div>
+                            <span className="text-xs">{symbolLabelsMap[symbol]}</span>
+                          </Button>
+                        ))}
+                      </div>
+                    </div>
+
+                    <div className="flex gap-2 pt-2">
+                      <Button
+                        onClick={handleAddTask}
+                        disabled={!taskInput.trim() || addingTask}
+                        className="flex-1"
+                      >
+                        {addingTask ? 'Adding...' : 'Add Task'}
+                      </Button>
+                      <Button
+                        variant="outline"
+                        onClick={() => {
+                          setIsDialogOpen(false);
+                          setTaskInput('');
+                          setSelectedSymbol('bullet');
+                        }}
+                        disabled={addingTask}
+                      >
+                        Cancel
+                      </Button>
                     </div>
                   </div>
+                </DialogContent>
+              </Dialog>
+            </div>
 
-                  <div className="flex gap-2 pt-2">
-                    <Button
-                      onClick={handleAddTask}
-                      disabled={!taskInput.trim() || addingTask}
-                      className="flex-1"
-                    >
-                      {addingTask ? 'Adding...' : 'Add Task'}
-                    </Button>
-                    <Button
-                      variant="outline"
-                      onClick={() => {
-                        setIsDialogOpen(false);
-                        setTaskInput('');
-                        setSelectedSymbol('bullet');
-                      }}
-                      disabled={addingTask}
-                    >
-                      Cancel
-                    </Button>
-                  </div>
-                </div>
-              </DialogContent>
-            </Dialog>
-          </div>
-
-          {/* Overview Stats */}
-          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-            <StatCard
-              title="Total Tasks"
-              value={stats.overview.totalTasks}
-              description="All time"
-              icon={Circle}
-            />
-            <StatCard
-              title="Completed"
-              value={stats.overview.completedTasks}
-              description={`${stats.overview.completionRate}% completion rate`}
-              icon={CheckCircle2}
-            />
-            <StatCard
-              title="Active Tasks"
-              value={activeTasks}
-              description="In progress"
-              icon={Target}
-            />
-            <StatCard
-              title="Collections"
-              value={stats.overview.totalCollections}
-              description="Custom lists"
-              icon={BookOpen}
-            />
-          </div>
-
-          {/* Completion Rate & Streaks */}
-          <div className="grid gap-6 md:grid-cols-2">
+            {/* Completion Rate & Streaks */}
+            <div className="grid gap-6 md:grid-cols-2">
             {/* Completion Rate Card */}
             <Card>
               <CardHeader>

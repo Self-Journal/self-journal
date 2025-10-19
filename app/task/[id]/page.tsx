@@ -197,8 +197,12 @@ export default function TaskDetailPage() {
                 <div className="flex items-center gap-2 text-sm text-muted-foreground">
                   <Calendar className="h-4 w-4" />
                   <span className="capitalize">{task.recurrence_pattern}</span>
-                  <span>•</span>
-                  <span>Since {format(parseISO(task.created_at), 'MMM d, yyyy')}</span>
+                  {task.created_at && (
+                    <>
+                      <span>•</span>
+                      <span>Since {format(parseISO(task.created_at), 'MMM d, yyyy')}</span>
+                    </>
+                  )}
                 </div>
               </div>
             </div>

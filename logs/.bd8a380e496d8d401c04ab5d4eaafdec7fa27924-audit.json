@@ -1,0 +1,15 @@
+{
+    "keep": {
+        "days": true,
+        "amount": 14
+    },
+    "auditLog": "/Users/lucianfialho/Code/personal/selfjournal/logs/.bd8a380e496d8d401c04ab5d4eaafdec7fa27924-audit.json",
+    "files": [
+        {
+            "date": 1760891371634,
+            "name": "/Users/lucianfialho/Code/personal/selfjournal/logs/mcp-puppeteer-2025-10-19.log",
+            "hash": "d5eac443474b2e70c040d19b3a9f208a0efadf6ca12486b401f4e409457954b3"
+        }
+    ],
+    "hashType": "sha256"
+}

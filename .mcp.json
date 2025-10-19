@@ -6,6 +6,11 @@
         "shadcn@latest",
         "mcp"
       ]
+    },
+    "puppeteer": {
+      "command": "npx",
+      "args": ["-y", "puppeteer-mcp-server"],
+      "env": {}
     }
   }
 }

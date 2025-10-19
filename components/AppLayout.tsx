@@ -1,5 +1,5 @@
 import AppNav from './AppNav';
-import PerformanceSidebar from './PerformanceSidebar';
+import QuickStatsSidebar from './QuickStatsSidebar';
 
 interface AppLayoutProps {
   children: React.ReactNode;
@@ -10,11 +10,11 @@ export default function AppLayout({ children, showSidebar = true }: AppLayoutPro
   return (
     <div className="min-h-screen flex flex-col bg-background">
       <AppNav />
-      <div className="flex flex-1">
-        <main className="flex-1 overflow-auto">
+      <div className="flex flex-1 overflow-hidden">
+        <main className="flex-1 overflow-auto min-w-0">
           {children}
         </main>
-        {showSidebar && <PerformanceSidebar />}
+        {showSidebar && <QuickStatsSidebar />}
       </div>
     </div>
   );

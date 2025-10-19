@@ -3,3 +3,4 @@
 
 export * from './db-prisma';
 export { default } from './prisma';
+export { prisma } from './prisma';

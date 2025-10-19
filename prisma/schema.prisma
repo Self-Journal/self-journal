@@ -30,7 +30,7 @@ model Entry {
   type      String   // 'daily', 'weekly', 'monthly', 'collection'
   title     String?
   createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @updatedAt @map("updated_at")
+  updatedAt DateTime @default(now()) @map("updated_at")
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   tasks     Task[]
 
@@ -48,7 +48,7 @@ model Task {
   recurrencePattern String?           @map("recurrence_pattern") // 'daily', 'weekly', 'monthly', 'yearly'
   parentTaskId      Int?              @map("parent_task_id")
   createdAt         DateTime          @default(now()) @map("created_at")
-  updatedAt         DateTime          @updatedAt @map("updated_at")
+  updatedAt         DateTime          @default(now()) @map("updated_at")
   entry             Entry             @relation(fields: [entryId], references: [id], onDelete: Cascade)
   parentTask        Task?             @relation("TaskRecurrence", fields: [parentTaskId], references: [id], onDelete: SetNull)
   childTasks        Task[]            @relation("TaskRecurrence")

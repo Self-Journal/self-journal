@@ -38,6 +38,16 @@ export const userOperations = {
   count: async () => {
     return await prisma.user.count();
   },
+
+  findById: async (id: number) => {
+    return await prisma.user.findUnique({
+      where: { id },
+      select: {
+        id: true,
+        username: true,
+      },
+    });
+  },
 };
 
 // Entry operations
@@ -227,6 +237,56 @@ export const taskCompletionOperations = {
       },
     });
   },
+
+  findByTask: async (taskId: number) => {
+    return await prisma.taskCompletion.findMany({
+      where: { taskId },
+      orderBy: { date: 'desc' },
+    });
+  },
+
+  findByTaskAndDateRange: async (taskId: number, startDate: string, endDate: string) => {
+    return await prisma.taskCompletion.findMany({
+      where: {
+        taskId,
+        date: {
+          gte: startDate,
+          lte: endDate,
+        },
+      },
+      orderBy: { date: 'asc' },
+    });
+  },
+
+  recordCompletion: async (taskId: number, date: string, completed: number) => {
+    const completion = await prisma.taskCompletion.upsert({
+      where: {
+        taskId_date: {
+          taskId,
+          date,
+        },
+      },
+      update: { completed },
+      create: {
+        taskId,
+        date,
+        completed,
+      },
+    });
+    return { lastInsertRowid: completion.id, changes: 1 };
+  },
+
+  delete: async (taskId: number, date: string) => {
+    await prisma.taskCompletion.delete({
+      where: {
+        taskId_date: {
+          taskId,
+          date,
+        },
+      },
+    });
+    return { lastInsertRowid: 0, changes: 1 };
+  },
 };
 
 // Collection operations
@@ -339,6 +399,39 @@ export const moodOperations = {
       },
     });
   },
+
+  findByDateRange: async (userId: number, startDate: string, endDate: string) => {
+    return await prisma.mood.findMany({
+      where: {
+        userId,
+        date: {
+          gte: startDate,
+          lte: endDate,
+        },
+      },
+      orderBy: { date: 'desc' },
+    });
+  },
+
+  findRecent: async (userId: number, limit = 90) => {
+    return await prisma.mood.findMany({
+      where: { userId },
+      orderBy: { date: 'desc' },
+      take: limit,
+    });
+  },
+
+  delete: async (userId: number, date: string) => {
+    await prisma.mood.delete({
+      where: {
+        userId_date: {
+          userId,
+          date,
+        },
+      },
+    });
+    return { lastInsertRowid: 0, changes: 1 };
+  },
 };
 
 // Mood entry operations (new table - multiple moods per day)
@@ -363,6 +456,23 @@ export const moodEntryOperations = {
         date,
       },
       orderBy: { time: 'asc' },
+    });
+  },
+
+  findRecent: async (userId: number, limit = 100) => {
+    return await prisma.moodEntry.findMany({
+      where: { userId },
+      orderBy: [
+        { date: 'desc' },
+        { time: 'desc' },
+      ],
+      take: limit,
+    });
+  },
+
+  findById: async (id: number) => {
+    return await prisma.moodEntry.findUnique({
+      where: { id },
     });
   },
 

@@ -13,13 +13,13 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Bullet Journal",
-  description: "Self-hosted bullet journal PWA",
+  title: "Self Journal",
+  description: "Self-hosted productivity journal PWA",
   manifest: "/manifest.json",
   appleWebApp: {
     capable: true,
     statusBarStyle: "default",
-    title: "Bullet Journal",
+    title: "Self Journal",
   },
 };
 

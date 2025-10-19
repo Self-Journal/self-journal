@@ -38,7 +38,7 @@ export default function AppNav() {
               <span className="text-xl font-bold leading-none">→</span>
             </div>
             <span className="text-lg font-bold tracking-tight hidden sm:inline">
-              Bullet Journal
+              Self Journal
             </span>
           </Link>
 

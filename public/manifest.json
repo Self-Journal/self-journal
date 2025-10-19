@@ -1,11 +1,11 @@
 {
-  "name": "Bullet Journal",
-  "short_name": "BulletJournal",
-  "description": "Self-hosted bullet journal PWA",
+  "name": "Self Journal",
+  "short_name": "SelfJournal",
+  "description": "Self-hosted productivity journal PWA",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#ffffff",
-  "theme_color": "#2563eb",
+  "theme_color": "#000000",
   "icons": [
     {
       "src": "/icon-192.png",

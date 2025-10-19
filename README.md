@@ -1,286 +1,276 @@
-# Bullet Journal - Self-Hosted PWA
+# SelfJournal
 
-Um aplicativo de Bullet Journal self-hosted desenvolvido com Next.js, TypeScript e SQLite. Funciona como Progressive Web App (PWA) para instalação em dispositivos móveis e desktop.
+> Your personal productivity companion that adapts to your life
 
-## Características
+A modern, privacy-first Bullet Journal Progressive Web App that combines the proven Bullet Journal methodology with smart features like recurring tasks, mood tracking, and productivity insights.
 
-- **Dashboard de Performance**: Visualize suas métricas de produtividade em tempo real
-  - Taxa de conclusão de tarefas
-  - Streaks de atividade (dias consecutivos)
-  - Breakdown de tarefas por status
-  - Atividade dos últimos 30 dias
-- **Daily/Weekly/Monthly Logs**: Organize suas tarefas e eventos por dia, semana ou mês
-- **Sistema de Símbolos**: Use símbolos clássicos do Bullet Journal com ícones modernos
-- **Collections Customizadas**: Crie listas e coleções personalizadas para projetos ou tópicos específicos
-- **Index Automático**: Navegue facilmente por todas as suas entradas e coleções
-- **PWA**: Instale no seu celular ou computador como um app nativo
-- **Self-Hosted**: Seus dados ficam no seu servidor, totalmente privado
-- **Autenticação Simples**: Sistema de login com usuário e senha (sem dependências externas)
-- **Design Minimalista**: Interface clean em preto e branco, focada no conteúdo
-- **Componentes Modernos**: Built with shadcn/ui para uma experiência consistente
+![License](https://img.shields.io/github/license/lucianfialho/selfjournal)
+![GitHub stars](https://img.shields.io/github/stars/lucianfialho/selfjournal)
+![GitHub issues](https://img.shields.io/github/issues/lucianfialho/selfjournal)
 
-## Tecnologias
+## ✨ Features
 
-- **Frontend**: Next.js 15 com TypeScript
-- **Styling**: Tailwind CSS v4
-- **UI Components**: shadcn/ui (New York style)
-- **Icons**: Lucide React
-- **Database**: SQLite com better-sqlite3
-- **Autenticação**: NextAuth.js v5
-- **PWA**: next-pwa
+- **📝 True Bullet Journal Methodology** - Rapid logging with bullets, tasks, events, and notes
+- **📱 Mobile-First PWA** - Works offline, installable on any device
+- **🔄 Smart Recurring Tasks** - Daily, weekly, monthly, and yearly task patterns
+- **😊 Mood Tracking Timeline** - Log multiple moods per day with contextual notes
+- **📊 Productivity Insights** - Activity heatmaps and performance analytics
+- **📚 Collections** - Organize related entries and tasks
+- **🎯 Multi-View Navigation** - Daily, Weekly, Monthly, and Index views
+- **🔒 Privacy-First** - All data stored locally in SQLite
+- **🎨 Beautiful Design** - Clean, minimal interface with dark mode
+- **💰 Free & Open Source** - MIT licensed
 
-## Requisitos
+## 🚀 Quick Start
 
-- Node.js 18+
-- npm ou yarn
+### One-Click Deploy
 
-## Instalação
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/lucianfialho/selfjournal&env=NEXTAUTH_SECRET,NEXTAUTH_URL&envDescription=Required%20environment%20variables&envLink=https://github.com/lucianfialho/selfjournal%23environment-variables)
 
-### 1. Clone o repositório
+[![Deploy on Railway](https://railway.app/button.svg)](https://railway.app/template/selfjournal)
+
+### Docker (Recommended for Self-Hosting)
 
 ```bash
-git clone <seu-repositorio>
+# Clone the repository
+git clone https://github.com/lucianfialho/selfjournal.git
 cd selfjournal
+
+# Copy environment variables
+cp .env.example .env
+
+# Edit .env and set your NEXTAUTH_SECRET
+# Generate one with: openssl rand -base64 32
+
+# Start with Docker Compose
+docker-compose up -d
+
+# Access at http://localhost:3000
 ```
 
-### 2. Instale as dependências
+### Local Development
 
 ```bash
+# Clone the repository
+git clone https://github.com/lucianfialho/selfjournal.git
+cd selfjournal
+
+# Install dependencies
 npm install
-```
 
-### 3. Gere os ícones do PWA
+# Set up environment variables
+cp .env.example .env
+# Edit .env and add your NEXTAUTH_SECRET
 
-```bash
-node scripts/create-icons.js
-```
-
-### 4. Configure as variáveis de ambiente
-
-Crie um arquivo `.env.local` na raiz do projeto:
-
-```env
-# NextAuth
-NEXTAUTH_URL=http://localhost:3000
-NEXTAUTH_SECRET=seu-secret-aqui-gerado-com-openssl
-```
-
-Para gerar um secret seguro:
-
-```bash
-openssl rand -base64 32
-```
-
-### 5. Inicie o servidor de desenvolvimento
-
-```bash
+# Start development server
 npm run dev
+
+# Access at http://localhost:3000
 ```
 
-Acesse http://localhost:3000
+## 📦 Deployment Options
 
-## Primeiro Acesso
+### Vercel
 
-Na primeira vez que você acessar o aplicativo, será apresentado um wizard de onboarding que:
+1. Click the "Deploy with Vercel" button above
+2. Set environment variables:
+   - `NEXTAUTH_SECRET`: Generate with `openssl rand -base64 32`
+   - `NEXTAUTH_URL`: Your Vercel URL (e.g., `https://yourapp.vercel.app`)
+3. Deploy!
 
-1. Explica o que é um Bullet Journal
-2. Ensina os símbolos utilizados
-3. Permite criar sua conta de administrador
+**Note:** Vercel uses ephemeral storage. For production use with persistent data, consider Docker or Railway.
 
-## Build para Produção
+### Railway
 
-### Build local
+1. Click the "Deploy on Railway" button above
+2. Railway will auto-generate `NEXTAUTH_SECRET`
+3. Set `NEXTAUTH_URL` to your Railway URL
+4. Deploy with persistent volume for SQLite database
+
+### Docker
+
+**Using Docker Compose (Recommended):**
 
 ```bash
+docker-compose up -d
+```
+
+**Manual Docker:**
+
+```bash
+# Build the image
+docker build -t selfjournal .
+
+# Run the container
+docker run -d \
+  -p 3000:3000 \
+  -e NEXTAUTH_SECRET="your-secret-here" \
+  -e NEXTAUTH_URL="https://yourdomain.com" \
+  -v selfjournal-data:/app/data \
+  --name selfjournal \
+  selfjournal
+```
+
+### Self-Hosted (VPS)
+
+```bash
+# Install Node.js 20+
+curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash -
+sudo apt-get install -y nodejs
+
+# Clone and setup
+git clone https://github.com/lucianfialho/selfjournal.git
+cd selfjournal
+npm install
 npm run build
-npm start
+
+# Set up environment
+cp .env.example .env
+# Edit .env with your values
+
+# Start with PM2 (production process manager)
+npm install -g pm2
+pm2 start npm --name selfjournal -- start
+pm2 save
+pm2 startup
 ```
 
-### Docker (opcional)
+## 🔧 Environment Variables
 
-Crie um `Dockerfile`:
+| Variable | Description | Required | Default |
+|----------|-------------|----------|---------|
+| `NEXTAUTH_SECRET` | Secret key for authentication (generate with `openssl rand -base64 32`) | ✅ Yes | - |
+| `NEXTAUTH_URL` | Canonical URL of your deployment | ✅ Yes | `http://localhost:3000` |
+| `NODE_ENV` | Environment mode | No | `development` |
 
-```dockerfile
-FROM node:18-alpine
+## 📖 Usage Guide
 
-WORKDIR /app
+### Getting Started
 
-COPY package*.json ./
-RUN npm ci --only=production
+1. **Register** - Create your account (data stored locally)
+2. **Setup** - Choose your journaling preferences
+3. **Start Logging** - Use the Daily view to track tasks and moods
 
-COPY . .
-RUN npm run build
+### Bullet Journal Basics
 
-EXPOSE 3000
+- **• Bullet** - Open task
+- **× Complete** - Finished task
+- **> Migrated** - Moved to another day
+- **< Scheduled** - Planned for future
+- **- Note** - General note
+- **○ Event** - Special event
 
-CMD ["npm", "start"]
-```
+### Views
 
-Build e execute:
+- **Daily** - Focus on today's tasks and mood
+- **Weekly** - Plan and review your week
+- **Monthly** - Big picture overview
+- **Index** - Quick navigation and search
+- **Collections** - Organize related tasks and notes
+
+### Recurring Tasks
+
+1. Create a task in Daily view
+2. Tap the task menu (⋮)
+3. Select "Make Recurring"
+4. Choose pattern: Daily, Weekly, Monthly, or Yearly
+5. Task automatically appears on future dates
+
+### Mood Tracking
+
+1. Tap a mood emoji in Daily view
+2. Optionally add a note (predefined or custom)
+3. Track multiple moods throughout the day
+4. View your mood timeline and patterns
+
+## 🛠 Tech Stack
+
+- **Framework:** Next.js 15 (App Router)
+- **Language:** TypeScript
+- **Database:** SQLite (better-sqlite3)
+- **Auth:** NextAuth.js
+- **Styling:** Tailwind CSS
+- **Components:** shadcn/ui
+- **PWA:** next-pwa
+- **Deployment:** Docker, Vercel, Railway
+
+## 📊 Database Schema
+
+SelfJournal uses SQLite for local-first data storage:
+
+- `users` - User accounts
+- `entries` - Daily/Weekly/Monthly journal entries
+- `tasks` - Tasks with bullet symbols and recurrence
+- `mood_entries` - Multiple mood logs per day
+- `collections` - Custom collections
+- `collection_items` - Items within collections
+
+See [lib/db.ts](./lib/db.ts) for complete schema.
+
+## 🤝 Contributing
+
+Contributions are welcome! Please read our [Contributing Guide](CONTRIBUTING.md) first.
+
+### Development Setup
 
 ```bash
-docker build -t bullet-journal .
-docker run -p 3000:3000 -v $(pwd)/bulletjournal.db:/app/bulletjournal.db bullet-journal
+# Fork and clone
+git clone https://github.com/YOUR_USERNAME/selfjournal.git
+
+# Install dependencies
+npm install
+
+# Create feature branch
+git checkout -b feature/amazing-feature
+
+# Make changes and test
+npm run dev
+
+# Commit with conventional commits
+git commit -m "feat: add amazing feature"
+
+# Push and create PR
+git push origin feature/amazing-feature
 ```
 
-## Deploy
+## 📝 Roadmap
 
-### Opções de Deploy Self-Hosted
+See [FUTURE_FEATURES.md](./FUTURE_FEATURES.md) for planned features.
 
-1. **VPS (DigitalOcean, Linode, etc.)**
-   - Instale Node.js
-   - Clone o repositório
-   - Configure nginx como reverse proxy
-   - Use PM2 para gerenciar o processo
+**Short-term:**
+- [ ] Cloud sync (optional)
+- [ ] Native mobile apps (iOS/Android)
+- [ ] Import/Export (JSON, Markdown)
+- [ ] Templates gallery
+- [ ] Habit tracking
 
-2. **Raspberry Pi**
-   - Perfeito para uso doméstico
-   - Baixo consumo de energia
-   - Acesso via rede local
+**Long-term:**
+- [ ] Collaboration features
+- [ ] AI-powered insights
+- [ ] Integration ecosystem
+- [ ] Multi-language support
 
-3. **Docker**
-   - Use o Dockerfile fornecido
-   - Monte o volume para persistir o banco de dados
+## 📄 License
 
-### Configuração Nginx (exemplo)
+MIT License - see [LICENSE](LICENSE) for details.
 
-```nginx
-server {
-    listen 80;
-    server_name seu-dominio.com;
+## 🙏 Acknowledgments
 
-    location / {
-        proxy_pass http://localhost:3000;
-        proxy_http_version 1.1;
-        proxy_set_header Upgrade $http_upgrade;
-        proxy_set_header Connection 'upgrade';
-        proxy_set_header Host $host;
-        proxy_cache_bypass $http_upgrade;
-    }
-}
-```
+- Inspired by the [Bullet Journal Method](https://bulletjournal.com/) by Ryder Carroll
+- Built with [Next.js](https://nextjs.org/)
+- UI components from [shadcn/ui](https://ui.shadcn.com/)
+- Icons from [Lucide](https://lucide.dev/)
 
-## Estrutura do Projeto
+## 💬 Community & Support
 
-```
-selfjournal/
-├── app/                    # Next.js App Router
-│   ├── api/               # API Routes
-│   │   ├── auth/         # Autenticação
-│   │   ├── entries/      # CRUD de entries (daily/weekly/monthly)
-│   │   ├── tasks/        # CRUD de tasks
-│   │   ├── collections/  # CRUD de collections
-│   │   ├── register/     # Registro de usuários
-│   │   └── setup/        # Verificação de setup inicial
-│   ├── daily/            # Página de logs diários
-│   ├── weekly/           # Página de logs semanais
-│   ├── monthly/          # Página de logs mensais
-│   ├── collections/      # Página de collections
-│   ├── index/            # Página de índice
-│   ├── login/            # Página de login
-│   ├── register/         # Página de registro
-│   └── setup/            # Wizard de onboarding
-├── components/            # Componentes React
-│   └── TaskList.tsx      # Componente de lista de tarefas
-├── lib/                   # Utilitários
-│   ├── db.ts             # Configuração e operações do SQLite
-│   └── auth.ts           # Configuração NextAuth
-├── public/               # Arquivos estáticos
-│   ├── manifest.json     # Manifest PWA
-│   ├── icon-192.png      # Ícone PWA 192x192
-│   └── icon-512.png      # Ícone PWA 512x512
-├── scripts/              # Scripts utilitários
-│   └── create-icons.js   # Geração de ícones
-└── bulletjournal.db      # Banco de dados SQLite (criado automaticamente)
-```
+- **GitHub Issues:** [Report bugs or request features](https://github.com/lucianfialho/selfjournal/issues)
+- **Discussions:** [Join the conversation](https://github.com/lucianfialho/selfjournal/discussions)
+- **Twitter:** [@lucianfialho](https://twitter.com/lucianfialho)
 
-## Banco de Dados
+## ⭐ Star History
 
-O banco de dados SQLite é criado automaticamente na primeira execução. Estrutura:
-
-- **users**: Usuários do sistema
-- **entries**: Entradas (daily/weekly/monthly)
-- **tasks**: Tarefas associadas às entradas
-- **collections**: Coleções customizadas
-- **collection_items**: Items das coleções
-
-### Backup
-
-Para fazer backup dos seus dados, simplesmente copie o arquivo `bulletjournal.db`:
-
-```bash
-cp bulletjournal.db bulletjournal.db.backup
-```
-
-## Símbolos do Bullet Journal
-
-- **• (bullet)**: Tarefa a fazer
-- **X (complete)**: Tarefa completa
-- **> (migrated)**: Tarefa migrada para outro dia
-- **< (scheduled)**: Tarefa agendada
-- **− (note)**: Nota ou observação
-- **○ (event)**: Evento ou compromisso
-
-## Desenvolvimento
-
-### Adicionar novos recursos
-
-1. Crie as rotas de API necessárias em `app/api/`
-2. Atualize o schema do banco em `lib/db.ts`
-3. Crie os componentes React em `components/`
-4. Adicione as páginas em `app/`
-
-### Estrutura da API
-
-Todas as rotas de API seguem o padrão REST:
-
-- `GET /api/resource` - Listar
-- `POST /api/resource` - Criar
-- `PUT /api/resource` - Atualizar
-- `DELETE /api/resource?id=X` - Deletar
-
-## Segurança
-
-- As senhas são hashadas com bcrypt (10 rounds)
-- Sessões JWT via NextAuth.js
-- Todas as rotas de API verificam autenticação
-- CSRF protection via NextAuth
-- SQL injection protection via prepared statements
-
-## Contribuindo
-
-Contribuições são bem-vindas! Por favor:
-
-1. Fork o projeto
-2. Crie uma branch para sua feature (`git checkout -b feature/AmazingFeature`)
-3. Commit suas mudanças (`git commit -m 'Add some AmazingFeature'`)
-4. Push para a branch (`git push origin feature/AmazingFeature`)
-5. Abra um Pull Request
-
-## Licença
-
-Este projeto é open source e está disponível sob a [MIT License](LICENSE).
-
-## Suporte
-
-Para reportar bugs ou solicitar features, abra uma issue no GitHub.
-
-## Roadmap
-
-- [ ] Exportação de dados (JSON, Markdown)
-- [ ] Importação de dados
-- [ ] Temas customizáveis
-- [ ] Suporte a anexos/imagens
-- [ ] Modo offline completo
-- [ ] Sincronização entre dispositivos
-- [ ] Tags e filtros
-- [ ] Busca full-text
-- [ ] Estatísticas e gráficos
-
-## Créditos
-
-Baseado no método Bullet Journal criado por Ryder Carroll.
+If you find SelfJournal useful, please consider giving it a star! It helps others discover the project.
 
 ---
 
-**Self-hosted • Private • Yours forever**
+**Made with ❤️ for mindful productivity**

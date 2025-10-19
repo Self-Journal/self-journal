@@ -1,0 +1,23 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "buildCommand": "npm run build",
+  "devCommand": "npm run dev",
+  "installCommand": "npm install",
+  "framework": "nextjs",
+  "env": {
+    "NEXTAUTH_SECRET": {
+      "description": "Secret key for NextAuth.js (generate with: openssl rand -base64 32)",
+      "required": true
+    },
+    "NEXTAUTH_URL": {
+      "description": "The canonical URL of your site (e.g., https://yourapp.vercel.app)",
+      "required": true
+    }
+  },
+  "regions": ["iad1"],
+  "functions": {
+    "app/api/**/*.ts": {
+      "maxDuration": 10
+    }
+  }
+}

@@ -1,0 +1,164 @@
+'use client';
+
+import { useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { format, addDays, subDays } from 'date-fns';
+import TaskList, { Task, TaskSymbol } from '@/components/TaskList';
+
+export default function DailyPage() {
+  const router = useRouter();
+  const [currentDate, setCurrentDate] = useState(new Date());
+  const [tasks, setTasks] = useState<Task[]>([]);
+  const [entryId, setEntryId] = useState<number | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  const dateStr = format(currentDate, 'yyyy-MM-dd');
+
+  useEffect(() => {
+    loadEntry();
+  }, [currentDate]);
+
+  const loadEntry = async () => {
+    setLoading(true);
+    try {
+      const response = await fetch(`/api/entries?date=${dateStr}&type=daily`);
+      if (response.status === 401) {
+        router.push('/login');
+        return;
+      }
+
+      const entry = await response.json();
+
+      if (entry) {
+        setEntryId(entry.id);
+        const tasksResponse = await fetch(`/api/tasks?entryId=${entry.id}`);
+        const tasksData = await tasksResponse.json();
+        setTasks(tasksData);
+      } else {
+        const createResponse = await fetch('/api/entries', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ date: dateStr, type: 'daily' }),
+        });
+        const newEntry = await createResponse.json();
+        setEntryId(newEntry.id);
+        setTasks([]);
+      }
+    } catch (error) {
+      console.error('Error loading entry:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleAddTask = async (content: string, symbol: TaskSymbol) => {
+    if (!entryId) return;
+
+    try {
+      const position = tasks.length;
+      const response = await fetch('/api/tasks', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ entryId, content, symbol, position }),
+      });
+      const { id } = await response.json();
+      setTasks([...tasks, { id, content, symbol, position }]);
+    } catch (error) {
+      console.error('Error adding task:', error);
+    }
+  };
+
+  const handleUpdateTask = async (id: number, content: string, symbol: TaskSymbol) => {
+    try {
+      await fetch('/api/tasks', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id, content, symbol }),
+      });
+      setTasks(tasks.map(t => t.id === id ? { ...t, content, symbol } : t));
+    } catch (error) {
+      console.error('Error updating task:', error);
+    }
+  };
+
+  const handleDeleteTask = async (id: number) => {
+    try {
+      await fetch(`/api/tasks?id=${id}`, { method: 'DELETE' });
+      setTasks(tasks.filter(t => t.id !== id));
+    } catch (error) {
+      console.error('Error deleting task:', error);
+    }
+  };
+
+  const goToPreviousDay = () => setCurrentDate(subDays(currentDate, 1));
+  const goToNextDay = () => setCurrentDate(addDays(currentDate, 1));
+  const goToToday = () => setCurrentDate(new Date());
+
+  const handleSignOut = async () => {
+    await fetch('/api/auth/signout', { method: 'POST' });
+    router.push('/login');
+  };
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <p>Loading...</p>
+      </div>
+    );
+  }
+
+  return (
+    <div className="min-h-screen bg-gray-50">
+      <nav className="bg-white shadow-sm">
+        <div className="max-w-4xl mx-auto px-4 py-4 flex justify-between items-center">
+          <h1 className="text-2xl font-bold">Bullet Journal</h1>
+          <div className="flex gap-4">
+            <a href="/daily" className="text-blue-600 font-medium">Daily</a>
+            <a href="/weekly" className="text-gray-600 hover:text-gray-900">Weekly</a>
+            <a href="/monthly" className="text-gray-600 hover:text-gray-900">Monthly</a>
+            <a href="/collections" className="text-gray-600 hover:text-gray-900">Collections</a>
+            <a href="/index" className="text-gray-600 hover:text-gray-900">Index</a>
+            <button onClick={handleSignOut} className="text-red-600 hover:text-red-700">
+              Sign Out
+            </button>
+          </div>
+        </div>
+      </nav>
+
+      <div className="max-w-4xl mx-auto px-4 py-8">
+        <div className="bg-white rounded-lg shadow-md p-6">
+          <div className="flex items-center justify-between mb-6">
+            <button
+              onClick={goToPreviousDay}
+              className="px-4 py-2 text-gray-600 hover:bg-gray-100 rounded"
+            >
+              ← Previous
+            </button>
+            <div className="text-center">
+              <h2 className="text-2xl font-bold">{format(currentDate, 'EEEE, MMMM d, yyyy')}</h2>
+              <button
+                onClick={goToToday}
+                className="text-sm text-blue-600 hover:text-blue-700 mt-1"
+              >
+                Today
+              </button>
+            </div>
+            <button
+              onClick={goToNextDay}
+              className="px-4 py-2 text-gray-600 hover:bg-gray-100 rounded"
+            >
+              Next →
+            </button>
+          </div>
+
+          <TaskList
+            tasks={tasks}
+            onAddTask={handleAddTask}
+            onUpdateTask={handleUpdateTask}
+            onDeleteTask={handleDeleteTask}
+          />
+        </div>
+      </div>
+    </div>
+  );
+}

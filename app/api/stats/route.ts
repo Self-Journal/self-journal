@@ -177,11 +177,11 @@ export async function GET() {
         completionRate,
         totalCollections: Number(totalCollections.count),
       },
-      tasksBySymbol: tasksBySymbol.reduce((acc: Record<string, number>, curr) => {
+      tasksBySymbol: tasksBySymbol.reduce((acc: Record<string, number>, curr: { symbol: string; count: bigint }) => {
         acc[curr.symbol] = Number(curr.count);
         return acc;
       }, {} as Record<string, number>),
-      entriesByType: entriesByType.reduce((acc: Record<string, number>, curr) => {
+      entriesByType: entriesByType.reduce((acc: Record<string, number>, curr: { type: string; count: bigint }) => {
         acc[curr.type] = Number(curr.count);
         return acc;
       }, {} as Record<string, number>),

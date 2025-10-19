@@ -256,7 +256,7 @@ Multiple CTAs throughout: "Start Journaling", "Try Demo", "View Source"
 ## 5. Pre-Launch Checklist
 
 ### Technical
-- [ ] Deploy production version (Vercel/Netlify)
+- [ ] Deploy production version (Railway recommended)
 - [ ] Set up error tracking (Sentry)
 - [ ] Set up analytics (privacy-focused: Plausible/Umami)
 - [ ] Performance testing (Lighthouse score 90+)

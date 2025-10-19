@@ -23,11 +23,11 @@ A modern, privacy-first Bullet Journal Progressive Web App that combines the pro
 
 ## 🚀 Quick Start
 
-### One-Click Deploy
-
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/Self-Journal/self-journal&env=NEXTAUTH_SECRET,NEXTAUTH_URL&envDescription=Required%20environment%20variables&envLink=https://github.com/Self-Journal/self-journal%23environment-variables)
+### Deploy to Cloud
 
 [![Deploy on Railway](https://railway.app/button.svg)](https://railway.app/template/selfjournal)
+
+**Railway** is the recommended cloud platform as it natively supports SQLite with persistent volumes.
 
 ### Docker (Recommended for Self-Hosting)
 
@@ -70,22 +70,19 @@ npm run dev
 
 ## 📦 Deployment Options
 
-### Vercel
-
-1. Click the "Deploy with Vercel" button above
-2. Set environment variables:
-   - `NEXTAUTH_SECRET`: Generate with `openssl rand -base64 32`
-   - `NEXTAUTH_URL`: Your Vercel URL (e.g., `https://yourapp.vercel.app`)
-3. Deploy!
-
-**Note:** Vercel uses ephemeral storage. For production use with persistent data, consider Docker or Railway.
-
-### Railway
+### Railway (Recommended for Cloud)
 
 1. Click the "Deploy on Railway" button above
 2. Railway will auto-generate `NEXTAUTH_SECRET`
 3. Set `NEXTAUTH_URL` to your Railway URL
-4. Deploy with persistent volume for SQLite database
+4. Railway automatically creates a persistent volume for your SQLite database
+
+**Why Railway?**
+- ✅ Native SQLite support with persistent volumes
+- ✅ Automatic SSL certificates
+- ✅ Free tier available ($5 credit/month)
+- ✅ Zero configuration needed
+- ✅ Perfect for production use
 
 ### Docker
 

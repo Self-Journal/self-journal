@@ -509,10 +509,10 @@ export const statsOperations = {
     });
 
     const stats = {
-      completed: tasks.filter((t) => t.symbol === 'complete').length,
-      open: tasks.filter((t) => t.symbol === 'bullet').length,
-      migrated: tasks.filter((t) => t.symbol === 'migrated').length,
-      scheduled: tasks.filter((t) => t.symbol === 'scheduled').length,
+      completed: tasks.filter((t: { symbol: string }) => t.symbol === 'complete').length,
+      open: tasks.filter((t: { symbol: string }) => t.symbol === 'bullet').length,
+      migrated: tasks.filter((t: { symbol: string }) => t.symbol === 'migrated').length,
+      scheduled: tasks.filter((t: { symbol: string }) => t.symbol === 'scheduled').length,
     };
 
     return stats;

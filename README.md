@@ -4,9 +4,9 @@
 
 A modern, privacy-first Bullet Journal Progressive Web App that combines the proven Bullet Journal methodology with smart features like recurring tasks, mood tracking, and productivity insights.
 
-![License](https://img.shields.io/github/license/lucianfialho/selfjournal)
-![GitHub stars](https://img.shields.io/github/stars/lucianfialho/selfjournal)
-![GitHub issues](https://img.shields.io/github/issues/lucianfialho/selfjournal)
+![License](https://img.shields.io/github/license/Self-Journal/self-journal)
+![GitHub stars](https://img.shields.io/github/stars/Self-Journal/self-journal)
+![GitHub issues](https://img.shields.io/github/issues/Self-Journal/self-journal)
 
 ## ✨ Features
 
@@ -25,7 +25,7 @@ A modern, privacy-first Bullet Journal Progressive Web App that combines the pro
 
 ### One-Click Deploy
 
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/lucianfialho/selfjournal&env=NEXTAUTH_SECRET,NEXTAUTH_URL&envDescription=Required%20environment%20variables&envLink=https://github.com/lucianfialho/selfjournal%23environment-variables)
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/Self-Journal/self-journal&env=NEXTAUTH_SECRET,NEXTAUTH_URL&envDescription=Required%20environment%20variables&envLink=https://github.com/Self-Journal/self-journal%23environment-variables)
 
 [![Deploy on Railway](https://railway.app/button.svg)](https://railway.app/template/selfjournal)
 
@@ -33,7 +33,7 @@ A modern, privacy-first Bullet Journal Progressive Web App that combines the pro
 
 ```bash
 # Clone the repository
-git clone https://github.com/lucianfialho/selfjournal.git
+git clone https://github.com/Self-Journal/self-journal.git
 cd selfjournal
 
 # Copy environment variables
@@ -52,7 +52,7 @@ docker-compose up -d
 
 ```bash
 # Clone the repository
-git clone https://github.com/lucianfialho/selfjournal.git
+git clone https://github.com/Self-Journal/self-journal.git
 cd selfjournal
 
 # Install dependencies
@@ -119,7 +119,7 @@ curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash -
 sudo apt-get install -y nodejs
 
 # Clone and setup
-git clone https://github.com/lucianfialho/selfjournal.git
+git clone https://github.com/Self-Journal/self-journal.git
 cd selfjournal
 npm install
 npm run build
@@ -263,8 +263,8 @@ MIT License - see [LICENSE](LICENSE) for details.
 
 ## 💬 Community & Support
 
-- **GitHub Issues:** [Report bugs or request features](https://github.com/lucianfialho/selfjournal/issues)
-- **Discussions:** [Join the conversation](https://github.com/lucianfialho/selfjournal/discussions)
+- **GitHub Issues:** [Report bugs or request features](https://github.com/Self-Journal/self-journal/issues)
+- **Discussions:** [Join the conversation](https://github.com/Self-Journal/self-journal/discussions)
 - **Twitter:** [@lucianfialho](https://twitter.com/lucianfialho)
 
 ## ⭐ Star History

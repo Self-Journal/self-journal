@@ -56,14 +56,14 @@ Creating a GitHub organization for SelfJournal provides several benefits:
 
 ```bash
 # Transfer repository to organization
-gh repo edit lucianfialho/selfjournal --visibility public
-gh api repos/lucianfialho/selfjournal/transfer \
+gh repo edit Self-Journal/self-journal --visibility public
+gh api repos/Self-Journal/self-journal/transfer \
   -f new_owner='selfjournal'
 ```
 
 **Option B: Using GitHub Web Interface**
 
-1. Go to https://github.com/lucianfialho/selfjournal
+1. Go to https://github.com/Self-Journal/self-journal
 2. Click "Settings"
 3. Scroll to the bottom "Danger Zone"
 4. Click "Transfer"
@@ -120,7 +120,7 @@ git push origin main
 
 Update references to the new repository URL:
 
-1. **README.md** - Change all `lucianfialho/selfjournal` to `selfjournal/selfjournal`
+1. **README.md** - Change all `Self-Journal/self-journal` to `selfjournal/selfjournal`
 2. **CONTRIBUTING.md** - Update repository URLs
 3. **GTM_STRATEGY.md** - Update GitHub links
 4. **vercel.json** - Update repository URL

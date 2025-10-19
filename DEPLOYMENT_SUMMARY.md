@@ -3,7 +3,7 @@
 ## ✅ What We've Completed
 
 ### Repository Setup
-- ✅ Created GitHub repository: https://github.com/lucianfialho/selfjournal
+- ✅ Created GitHub repository: https://github.com/Self-Journal/self-journal
 - ✅ Initial commit with full application code
 - ✅ Comprehensive README with features and usage
 - ✅ CONTRIBUTING.md guide
@@ -62,7 +62,7 @@
 
 **Quick Start:**
 ```bash
-git clone https://github.com/lucianfialho/selfjournal.git
+git clone https://github.com/Self-Journal/self-journal.git
 cd selfjournal
 cp .env.example .env
 # Edit .env with your secrets

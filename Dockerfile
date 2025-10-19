@@ -35,6 +35,9 @@ RUN npm run build
 FROM base AS runner
 WORKDIR /app
 
+# Install sqlite3 for database management
+RUN apk add --no-cache sqlite
+
 ENV NODE_ENV=production
 ENV NEXT_TELEMETRY_DISABLED=1
 ENV DATABASE_URL="file:/app/data/selfjournal.db"

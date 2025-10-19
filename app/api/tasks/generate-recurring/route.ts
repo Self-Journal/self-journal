@@ -85,7 +85,7 @@ export async function POST(request: NextRequest) {
         // Check if this task instance already exists for this date
         const existingTasks = await taskOperations.findByEntry(entry.id);
         const alreadyExists = existingTasks.some(
-          (t) => t.content === recurringTask.content &&
+          (t: { content: string; parentTaskId: number | null }) => t.content === recurringTask.content &&
                      (t.parentTaskId === recurringTask.id || t.parentTaskId === recurringTask.parentTaskId)
         );
 

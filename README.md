@@ -4,6 +4,8 @@
 
 A modern, privacy-first Bullet Journal Progressive Web App that combines the proven Bullet Journal methodology with smart features like recurring tasks, mood tracking, and productivity insights.
 
+![Self Journal Dashboard](.github/assets/hero.png)
+
 ![License](https://img.shields.io/github/license/Self-Journal/self-journal)
 ![GitHub stars](https://img.shields.io/github/stars/Self-Journal/self-journal)
 ![GitHub issues](https://img.shields.io/github/issues/Self-Journal/self-journal)
@@ -246,6 +248,29 @@ See [FUTURE_FEATURES.md](./FUTURE_FEATURES.md) for planned features.
 - [ ] AI-powered insights
 - [ ] Integration ecosystem
 - [ ] Multi-language support
+
+## 📸 Screenshots
+
+### Dashboard
+![Dashboard with productivity insights](.github/assets/hero.png)
+
+### Views
+<details>
+<summary>Click to see all views</summary>
+
+**Daily View**
+Track your daily tasks, events, and mood
+
+**Weekly View**
+Plan and review your week at a glance
+
+**Monthly View**
+Big picture overview of your month
+
+**Collections**
+Organize related tasks and notes in custom collections
+
+</details>
 
 ## 📄 License
 

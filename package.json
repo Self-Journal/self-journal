@@ -5,7 +5,8 @@
   "scripts": {
     "dev": "next dev --turbopack",
     "build": "next build --turbopack",
-    "start": "node server.js",
+    "start": "./docker-entrypoint.sh",
+    "start:direct": "node server.js",
     "lint": "eslint",
     "generate-icons": "node scripts/create-icons.js",
     "migrate": "tsx scripts/migrate-recurring.ts",

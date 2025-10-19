@@ -185,7 +185,7 @@ export async function GET() {
         acc[curr.type] = Number(curr.count);
         return acc;
       }, {} as Record<string, number>),
-      recentActivity: recentActivity.map(r => ({
+      recentActivity: recentActivity.map((r: { date: string; entries: bigint; tasks: bigint }) => ({
         date: r.date,
         entries: Number(r.entries),
         tasks: Number(r.tasks),
@@ -195,11 +195,11 @@ export async function GET() {
         longest: longestStreak,
       },
       moods: moodData,
-      moodDistribution: moodDistribution.reduce((acc, curr) => {
+      moodDistribution: moodDistribution.reduce((acc: Record<string, number>, curr: { mood: string; count: bigint }) => {
         acc[curr.mood] = Number(curr.count);
         return acc;
       }, {} as Record<string, number>),
-      productivityTimeline: productivityTimeline.map(p => ({
+      productivityTimeline: productivityTimeline.map((p: { date: string; completed: bigint; total: bigint }) => ({
         date: p.date,
         completed: Number(p.completed),
         total: Number(p.total),

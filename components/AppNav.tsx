@@ -34,12 +34,12 @@ export default function AppNav() {
         <div className="flex h-14 lg:h-16 items-center justify-between">
           {/* Logo */}
           <Link href="/dashboard" className="flex items-center gap-2 group">
-            <div className="flex items-center gap-1 px-2 py-1 rounded-md bg-foreground text-background transition-transform group-hover:scale-105">
-              <span className="text-base font-bold leading-none">•</span>
-              <span className="text-base font-bold leading-none">X</span>
-              <span className="text-base font-bold leading-none">→</span>
+            <div className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-md bg-foreground text-background transition-transform group-hover:scale-105">
+              <span className="text-lg font-bold leading-none">•</span>
+              <span className="text-lg font-bold leading-none">X</span>
+              <span className="text-lg font-bold leading-none">→</span>
             </div>
-            <span className="text-base font-bold tracking-tight hidden sm:inline">
+            <span className="text-lg font-bold tracking-tight hidden sm:inline">
               Self Journal
             </span>
           </Link>
@@ -71,7 +71,7 @@ export default function AppNav() {
           <Sheet open={isOpen} onOpenChange={setIsOpen}>
             <SheetTrigger asChild className="lg:hidden">
               <Button variant="ghost" size="sm" className="px-2">
-                <Menu className="h-5 w-5" />
+                <Menu className="h-6 w-6" />
               </Button>
             </SheetTrigger>
             <SheetContent side="right" className="w-64">

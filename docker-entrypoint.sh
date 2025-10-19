@@ -7,8 +7,17 @@ if [ -z "$DATABASE_URL" ]; then
   echo "DATABASE_URL not set, using default: $DATABASE_URL"
 fi
 
-echo "Running Prisma migrations..."
-npx prisma migrate deploy
+# Check if database file exists
+DB_FILE="/app/data/selfjournal.db"
+
+if [ ! -f "$DB_FILE" ]; then
+  echo "Database not found. Running initial migration..."
+  npx prisma migrate deploy
+  echo "Database initialized successfully"
+else
+  echo "Database exists. Checking for pending migrations..."
+  npx prisma migrate deploy
+fi
 
 echo "Starting Next.js server..."
 exec node server.js

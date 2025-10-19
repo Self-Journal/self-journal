@@ -20,7 +20,7 @@ export async function POST(request: Request) {
     }
 
     // Check if user already exists
-    const existingUser = userOperations.findByUsername(username);
+    const existingUser = await userOperations.findByUsername(username);
     if (existingUser) {
       return NextResponse.json(
         { error: 'Username already exists' },
@@ -29,7 +29,7 @@ export async function POST(request: Request) {
     }
 
     // Create user
-    userOperations.create(username, password);
+    await userOperations.create(username, password);
 
     return NextResponse.json(
       { message: 'User created successfully' },

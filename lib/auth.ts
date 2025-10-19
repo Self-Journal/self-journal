@@ -15,7 +15,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
           return null;
         }
 
-        const user = userOperations.verifyPassword(
+        const user = await userOperations.verifyPassword(
           credentials.username as string,
           credentials.password as string
         );
@@ -42,8 +42,23 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       return token;
     },
     async session({ session, token }) {
-      if (session.user) {
-        session.user.id = token.id as string;
+      if (session.user && token.id) {
+        // Validate that user still exists in database
+        try {
+          const userId = parseInt(token.id as string);
+          const userExists = await userOperations.findById(userId);
+
+          if (!userExists) {
+            // User no longer exists, invalidate session
+            throw new Error('User not found');
+          }
+
+          session.user.id = token.id as string;
+        } catch (error) {
+          // If user doesn't exist, return null to invalidate session
+          console.error('Session validation error:', error);
+          throw new Error('Invalid session');
+        }
       }
       return session;
     }

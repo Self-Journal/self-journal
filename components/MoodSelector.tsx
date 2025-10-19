@@ -83,7 +83,7 @@ export default function MoodSelector({ moodEntries, onAddMood, onDeleteMood }: M
         {/* Mood Timeline */}
         {moodEntries.length > 0 && (
           <div className="space-y-2">
-            <h4 className="text-sm font-medium text-muted-foreground">Today's Mood Timeline</h4>
+            <h4 className="text-sm font-medium text-muted-foreground">Today&apos;s Mood Timeline</h4>
             <div className="space-y-2">
               {moodEntries.map((entry) => {
                 const config = moodConfig[entry.mood];

@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { format } from 'date-fns';
-import AppNav from '@/components/AppNav';
+import AppLayout from '@/components/AppLayout';
 import StatCard from '@/components/StatCard';
 import ProgressRing from '@/components/ProgressRing';
 import ActivityHeatmap from '@/components/ActivityHeatmap';
@@ -177,36 +177,32 @@ export default function DashboardPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex flex-col">
-        <AppNav />
+      <AppLayout showSidebar={false}>
         <div className="flex-1 flex items-center justify-center">
           <div className="flex items-center gap-2">
             <div className="w-2 h-2 rounded-full bg-foreground animate-pulse" />
             <p className="text-sm text-muted-foreground">Loading stats...</p>
           </div>
         </div>
-      </div>
+      </AppLayout>
     );
   }
 
   if (!stats) {
     return (
-      <div className="min-h-screen flex flex-col">
-        <AppNav />
+      <AppLayout showSidebar={false}>
         <div className="flex-1 flex items-center justify-center">
           <p className="text-muted-foreground">No data available</p>
         </div>
-      </div>
+      </AppLayout>
     );
   }
 
   const activeTasks = stats.overview.totalTasks - stats.overview.completedTasks - stats.overview.migratedTasks;
 
   return (
-    <div className="min-h-screen flex flex-col bg-background">
-      <AppNav />
-
-      <main className="w-full mx-auto py-8 px-6 flex-1">
+    <AppLayout showSidebar={true}>
+      <div className="w-full mx-auto py-8 px-6 flex-1">
         <div className="space-y-8">
           {/* Header */}
           <div className="flex items-center justify-between">
@@ -497,7 +493,7 @@ export default function DashboardPage() {
             </Card>
           )}
         </div>
-      </main>
-    </div>
+      </div>
+    </AppLayout>
   );
 }

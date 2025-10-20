@@ -1,9 +1,10 @@
-// Script to create PNG icons for PWA
+// Script to create PNG icons and favicon for PWA
 const sharp = require('sharp');
 const fs = require('fs');
 const path = require('path');
 
 const publicDir = path.join(__dirname, '..', 'public');
+const appDir = path.join(__dirname, '..', 'app');
 
 // Create a simple colored square with a bullet point
 const createIcon = async (size) => {
@@ -37,11 +38,55 @@ const createIcon = async (size) => {
     .toFile(path.join(publicDir, `icon-${size}.png`));
 };
 
+// Create favicon.ico
+const createFavicon = async () => {
+  const svg = `
+    <svg width="32" height="32" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="grad" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" style="stop-color:#3b82f6;stop-opacity:1" />
+          <stop offset="100%" style="stop-color:#1d4ed8;stop-opacity:1" />
+        </linearGradient>
+      </defs>
+      <rect width="32" height="32" fill="url(#grad)" rx="3"/>
+      <circle cx="16" cy="16" r="9" fill="white" opacity="0.9"/>
+      <text
+        x="16"
+        y="20"
+        font-family="Arial, sans-serif"
+        font-size="14"
+        fill="#2563eb"
+        text-anchor="middle"
+        font-weight="bold"
+      >•</text>
+    </svg>
+  `;
+
+  const buffer = Buffer.from(svg);
+
+  // Create as PNG first
+  const pngPath = path.join(publicDir, 'favicon-temp.png');
+  await sharp(buffer)
+    .resize(32, 32)
+    .png()
+    .toFile(pngPath);
+
+  // Copy to app directory as favicon.ico
+  const icoPath = path.join(appDir, 'favicon.ico');
+  fs.copyFileSync(pngPath, icoPath);
+
+  // Clean up temp file
+  fs.unlinkSync(pngPath);
+};
+
 async function main() {
   try {
     await createIcon(192);
     await createIcon(512);
     console.log('✓ PNG icons created successfully!');
+
+    await createFavicon();
+    console.log('✓ Favicon created successfully!');
 
     // Clean up SVG files if they exist
     const svgFiles = ['icon-192.svg', 'icon-512.svg'];
@@ -52,7 +97,10 @@ async function main() {
       }
     });
 
-    console.log('✓ Temporary SVG files cleaned up');
+    console.log('\n✅ All icons generated!');
+    console.log('   - public/icon-192.png');
+    console.log('   - public/icon-512.png');
+    console.log('   - app/favicon.ico');
   } catch (error) {
     console.error('Error creating icons:', error);
     process.exit(1);

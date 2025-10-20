@@ -18,7 +18,8 @@ import {
   CalendarDays,
   Sparkles,
   Lock,
-  User
+  User,
+  BookOpen
 } from 'lucide-react';
 
 export default function SetupPage() {
@@ -183,7 +184,7 @@ export default function SetupPage() {
                         </div>
                       </div>
                       <div className="flex items-start gap-3 p-3 rounded-lg border bg-card">
-                        <BookText className="h-5 w-5 mt-0.5 text-muted-foreground" />
+                        <BookOpen className="h-5 w-5 mt-0.5 text-muted-foreground" />
                         <div>
                           <p className="font-medium">Custom Collections</p>
                           <p className="text-sm text-muted-foreground">Organize specific topics or projects</p>

@@ -30,8 +30,21 @@ export const userOperations = {
 
   verifyPassword: async (username: string, password: string) => {
     const user = await userOperations.findByUsername(username);
-    if (!user) return null;
+    if (!user) {
+      console.log('verifyPassword: user not found:', username);
+      return null;
+    }
+
+    console.log('verifyPassword: found user:', {
+      id: user.id,
+      username: user.username,
+      hashLength: user.passwordHash?.length,
+      hashPrefix: user.passwordHash?.substring(0, 10)
+    });
+
     const isValid = bcrypt.compareSync(password, user.passwordHash);
+    console.log('verifyPassword: bcrypt compare result:', isValid);
+
     return isValid ? { id: user.id, username: user.username } : null;
   },
 

@@ -121,7 +121,7 @@ export default function SetupPage() {
             <Logo size="lg" />
             <h1 className="text-3xl font-bold">Self Journal</h1>
           </div>
-          <p className="text-muted-foreground">Your personal productivity companion</p>
+          <p className="text-muted-foreground">You're lazy and I can prove it!</p>
         </div>
 
         <Card className="border-2">

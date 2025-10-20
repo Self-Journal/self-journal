@@ -8,8 +8,8 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Separator } from '@/components/ui/separator';
+import Logo from '@/components/Logo';
 import {
-  BookText,
   Circle,
   CheckCircle2,
   ArrowRight,
@@ -117,7 +117,7 @@ export default function SetupPage() {
         {/* Logo/Brand */}
         <div className="text-center mb-8">
           <div className="inline-flex items-center gap-2 mb-2">
-            <BookText className="h-8 w-8" />
+            <Logo size="lg" />
             <h1 className="text-3xl font-bold">Self Journal</h1>
           </div>
           <p className="text-muted-foreground">Your personal productivity companion</p>

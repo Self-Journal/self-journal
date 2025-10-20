@@ -3,6 +3,11 @@ import { userOperations } from '@/lib/db';
 
 export async function GET() {
   try {
+    // In demo mode, setup is never needed
+    if (process.env.DEMO_MODE === 'true') {
+      return NextResponse.json({ needsSetup: false });
+    }
+
     // Check if there are any users in the database
     const count = await userOperations.count();
 

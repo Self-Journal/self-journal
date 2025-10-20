@@ -7,7 +7,8 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { BookText, Lock, User, LogIn } from 'lucide-react';
+import { Lock, User, LogIn } from 'lucide-react';
+import Logo from '@/components/Logo';
 
 export default function LoginPage() {
   const [username, setUsername] = useState('');
@@ -106,7 +107,7 @@ export default function LoginPage() {
         {/* Logo/Brand */}
         <div className="text-center mb-8">
           <div className="inline-flex items-center gap-2 mb-2">
-            <BookText className="h-8 w-8" />
+            <Logo size="lg" />
             <h1 className="text-3xl font-bold">Self Journal</h1>
           </div>
           <p className="text-muted-foreground">Welcome back</p>

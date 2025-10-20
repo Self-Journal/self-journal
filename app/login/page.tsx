@@ -59,8 +59,8 @@ export default function LoginPage() {
 
         if (!result?.error) {
           console.log('Auto-login successful, redirecting...');
-          router.push('/');
-          router.refresh();
+          // Force full page reload to ensure session is loaded
+          window.location.href = '/daily';
         } else {
           console.error('Demo auto-login failed:', result.error);
           setLoading(false);
@@ -91,8 +91,8 @@ export default function LoginPage() {
       if (result?.error) {
         setError('Invalid username or password');
       } else {
-        router.push('/');
-        router.refresh();
+        // Force full page reload to ensure session is loaded
+        window.location.href = '/daily';
       }
     } catch (err) {
       setError('An error occurred. Please try again.');

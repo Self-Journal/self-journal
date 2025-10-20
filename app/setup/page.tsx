@@ -91,8 +91,8 @@ export default function SetupPage() {
           setError('Account created but login failed. Please try logging in.');
           setLoading(false);
         } else {
-          router.push('/daily');
-          router.refresh();
+          // Force full page reload to ensure session is loaded
+          window.location.href = '/daily';
         }
       }
     } catch (err) {

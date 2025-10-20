@@ -7,6 +7,7 @@ Demo Mode allows you to run Self Journal with automatic login, perfect for showc
 - **Auto-login**: Users are automatically logged in as a demo user
 - **No authentication required**: Skip the login page entirely
 - **Pre-populated data**: Demo user comes with sample tasks, collections, and mood entries
+- **Demo Mode Banner**: Fixed footer banner indicating demo mode is active
 - **Easy setup**: Single environment variable to enable
 
 ## Setup
@@ -49,7 +50,18 @@ When `DEMO_MODE=true`:
 1. **Middleware Check**: The middleware detects unauthenticated users
 2. **Auto-redirect**: Users are redirected to the login page
 3. **Auto-login**: The login page automatically signs in with demo credentials
-4. **Seamless Experience**: Users are immediately redirected to the dashboard
+4. **Demo Banner**: A fixed footer banner appears indicating demo mode is active
+5. **Seamless Experience**: Users are immediately redirected to the dashboard
+
+### Demo Mode Banner
+
+The demo mode banner:
+- Appears at the bottom of every page when `DEMO_MODE=true`
+- Shows "Demo Mode Active" with an info icon
+- Includes a message that data is temporary and resets periodically
+- Can be dismissed by users (but will reappear on page refresh)
+- Automatically adds padding to the body to prevent content overlap
+- Responsive design with different messages for mobile and desktop
 
 ## Production Deployment
 
@@ -75,10 +87,10 @@ For a public demo instance:
   - Consider implementing data cleanup scripts
   - Set up alerts for unusual activity
 
-- **Privacy Notice**: Add a banner or notice informing users that:
+- **Privacy Notice**: The built-in demo banner automatically informs users that:
   - This is a demo environment
   - Data may be reset periodically
-  - Data is not private and should not contain sensitive information
+  - Data is temporary and for preview purposes only
 
 ## Disabling Demo Mode
 

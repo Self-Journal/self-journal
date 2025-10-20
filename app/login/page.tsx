@@ -19,6 +19,7 @@ export default function LoginPage() {
 
   useEffect(() => {
     checkSetup();
+    checkDemoMode();
   }, []);
 
   const checkSetup = async () => {
@@ -33,6 +34,33 @@ export default function LoginPage() {
       console.error('Error checking setup:', error);
     } finally {
       setChecking(false);
+    }
+  };
+
+  const checkDemoMode = async () => {
+    try {
+      const response = await fetch('/api/demo/check');
+      const data = await response.json();
+
+      if (data.isDemoMode) {
+        // Auto-login with demo credentials
+        setLoading(true);
+        const result = await signIn('credentials', {
+          username: 'demo',
+          password: 'demo123',
+          redirect: false,
+        });
+
+        if (!result?.error) {
+          router.push('/');
+          router.refresh();
+        } else {
+          console.error('Demo auto-login failed:', result.error);
+          setChecking(false);
+        }
+      }
+    } catch (error) {
+      console.error('Error checking demo mode:', error);
     }
   };
 

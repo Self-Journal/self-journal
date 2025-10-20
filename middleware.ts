@@ -5,33 +5,20 @@ import { getToken } from 'next-auth/jwt';
 export async function middleware(request: NextRequest) {
   const isDemoMode = process.env.DEMO_MODE === 'true';
 
-  // If not in demo mode, let NextAuth handle authentication normally
-  if (!isDemoMode) {
+  // In demo mode, don't enforce authentication at middleware level
+  // Let the auto-login on /login page handle it
+  if (isDemoMode) {
+    // Only redirect to login if accessing root path
+    if (request.nextUrl.pathname === '/') {
+      return NextResponse.redirect(new URL('/login', request.url));
+    }
+    // Allow all other requests in demo mode
     return NextResponse.next();
   }
 
-  // In demo mode, check if user is already authenticated
-  const token = await getToken({
-    req: request,
-    secret: process.env.NEXTAUTH_SECRET
-  });
-
-  // If user is authenticated, allow request to continue
-  if (token) {
-    return NextResponse.next();
-  }
-
-  // If accessing login or setup pages, allow it (they handle auto-login)
-  if (request.nextUrl.pathname.startsWith('/login') ||
-      request.nextUrl.pathname.startsWith('/setup') ||
-      request.nextUrl.pathname.startsWith('/api/auth') ||
-      request.nextUrl.pathname.startsWith('/api/setup') ||
-      request.nextUrl.pathname.startsWith('/api/demo')) {
-    return NextResponse.next();
-  }
-
-  // For all other pages, redirect to login (which will auto-login in demo mode)
-  return NextResponse.redirect(new URL('/login', request.url));
+  // Production mode - enforce authentication
+  // For now, just allow everything (you can add auth logic here later)
+  return NextResponse.next();
 }
 
 export const config = {

@@ -43,7 +43,10 @@ export default function LoginPage() {
       const response = await fetch('/api/demo/check');
       const data = await response.json();
 
+      console.log('Demo mode check:', data);
+
       if (data.isDemoMode) {
+        console.log('Demo mode enabled, attempting auto-login...');
         // Auto-login with demo credentials
         setLoading(true);
         const result = await signIn('credentials', {
@@ -52,16 +55,24 @@ export default function LoginPage() {
           redirect: false,
         });
 
+        console.log('Sign in result:', result);
+
         if (!result?.error) {
+          console.log('Auto-login successful, redirecting...');
           router.push('/');
           router.refresh();
         } else {
           console.error('Demo auto-login failed:', result.error);
+          setLoading(false);
           setChecking(false);
         }
+      } else {
+        console.log('Demo mode disabled');
+        setChecking(false);
       }
     } catch (error) {
       console.error('Error checking demo mode:', error);
+      setChecking(false);
     }
   };
 

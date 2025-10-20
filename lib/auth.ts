@@ -3,6 +3,7 @@ import CredentialsProvider from 'next-auth/providers/credentials';
 import { userOperations } from './db';
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
+  trustHost: true,
   providers: [
     CredentialsProvider({
       name: 'Credentials',
@@ -11,7 +12,10 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         password: { label: 'Password', type: 'password' }
       },
       async authorize(credentials) {
+        console.log('Auth: authorize called with username:', credentials?.username);
+
         if (!credentials?.username || !credentials?.password) {
+          console.log('Auth: missing credentials');
           return null;
         }
 
@@ -21,12 +25,14 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         );
 
         if (user) {
+          console.log('Auth: user verified successfully:', { id: user.id, username: user.username });
           return {
             id: user.id.toString(),
             name: user.username
           };
         }
 
+        console.log('Auth: user verification failed');
         return null;
       }
     })

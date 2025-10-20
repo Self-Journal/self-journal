@@ -59,8 +59,10 @@ COPY --from=builder --chown=nextjs:nodejs /app/node_modules/@prisma ./node_modul
 # Copy scripts and lib for seeding
 COPY --chown=nextjs:nodejs scripts ./scripts
 COPY --chown=nextjs:nodejs lib ./lib
-COPY --from=builder --chown=nextjs:nodejs /app/node_modules/tsx ./node_modules/tsx
-COPY --from=builder --chown=nextjs:nodejs /app/node_modules/bcryptjs ./node_modules/bcryptjs
+
+# Copy all node_modules for seed script to work
+# The standalone build doesn't include devDependencies like tsx
+COPY --from=builder --chown=nextjs:nodejs /app/node_modules ./node_modules
 
 # Copy entrypoint script
 COPY --chown=nextjs:nodejs docker-entrypoint.sh ./

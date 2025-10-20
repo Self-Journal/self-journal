@@ -19,21 +19,41 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
           return null;
         }
 
-        const user = await userOperations.verifyPassword(
-          credentials.username as string,
-          credentials.password as string
-        );
+        try {
+          const user = await userOperations.verifyPassword(
+            credentials.username as string,
+            credentials.password as string
+          );
 
-        if (user) {
-          console.log('Auth: user verified successfully:', { id: user.id, username: user.username });
-          return {
-            id: user.id.toString(),
-            name: user.username
-          };
+          if (user) {
+            console.log('Auth: user verified successfully:', { id: user.id, username: user.username });
+            return {
+              id: user.id.toString(),
+              name: user.username
+            };
+          }
+
+          console.log('Auth: user verification failed - user not found or password incorrect');
+
+          // In demo mode, try to find if user exists
+          if (process.env.DEMO_MODE === 'true' && credentials.username === 'demo') {
+            try {
+              const demoUser = await userOperations.findByUsername('demo');
+              if (!demoUser) {
+                console.error('Auth: DEMO USER NOT FOUND IN DATABASE! Run: npm run seed:demo');
+              } else {
+                console.log('Auth: demo user exists but password verification failed');
+              }
+            } catch (err) {
+              console.error('Auth: error checking demo user:', err);
+            }
+          }
+
+          return null;
+        } catch (error) {
+          console.error('Auth: error during authorization:', error);
+          return null;
         }
-
-        console.log('Auth: user verification failed');
-        return null;
       }
     })
   ],

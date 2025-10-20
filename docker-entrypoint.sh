@@ -46,5 +46,23 @@ fi
 echo "Generating Prisma Client..."
 npx prisma generate --schema=./prisma/schema.prisma
 
+# Seed demo user if DEMO_MODE is enabled
+if [ "$DEMO_MODE" = "true" ]; then
+  echo "Demo mode enabled - checking for demo user..."
+
+  # Check if demo user exists
+  DEMO_USER_COUNT=$(sqlite3 "$DB_FILE" "SELECT count(*) FROM users WHERE username='demo';" 2>/dev/null || echo "0")
+
+  if [ "$DEMO_USER_COUNT" = "0" ]; then
+    echo "Demo user not found. Running seed script..."
+    npx tsx scripts/seed-demo.ts
+    echo "✓ Demo user and sample data created"
+  else
+    echo "✓ Demo user already exists"
+  fi
+else
+  echo "Demo mode is disabled (DEMO_MODE != true)"
+fi
+
 echo "Starting Next.js server..."
 exec node server.js

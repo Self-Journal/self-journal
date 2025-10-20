@@ -14,6 +14,8 @@ services:
       - NEXTAUTH_SECRET=${NEXTAUTH_SECRET:-your-secret-key-here}
       - NEXTAUTH_URL=${NEXTAUTH_URL:-http://localhost:3000}
       - NODE_ENV=production
+      # Set to 'true' to enable demo mode with auto-login
+      - DEMO_MODE=${DEMO_MODE:-false}
     volumes:
       # Persist SQLite database
       - selfjournal-data:/app/data

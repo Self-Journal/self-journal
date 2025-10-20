@@ -70,6 +70,30 @@ npm run dev
 # Access at http://localhost:3000
 ```
 
+### 🎭 Demo Mode
+
+Want to run a public demo instance? Enable demo mode for automatic login and sample data:
+
+```bash
+# Docker Compose
+DEMO_MODE=true docker-compose up -d
+
+# Or add to your .env file
+DEMO_MODE=true
+```
+
+When `DEMO_MODE=true`:
+- ✅ **Auto-login** - Users are automatically logged in as a demo user
+- ✅ **Sample data** - Pre-populated with tasks, collections, and mood entries
+- ✅ **Demo banner** - Fixed footer banner indicates this is a demo instance
+- ✅ **Auto-seed** - Demo user is created automatically on first startup
+
+**Demo credentials** (if manual login is needed):
+- Username: `demo`
+- Password: `demo123`
+
+See [DEMO_MODE.md](./DEMO_MODE.md) for detailed documentation.
+
 ## 📦 Deployment Options
 
 ### Railway (Recommended for Cloud)

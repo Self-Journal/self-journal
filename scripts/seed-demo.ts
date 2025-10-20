@@ -79,18 +79,20 @@ async function seedDemo() {
 
     if (todayEntry) {
       const sampleTasks = [
-        { text: 'Review pull requests', status: 'completed', order: 0 },
-        { text: 'Update project documentation', status: 'in_progress', order: 1 },
-        { text: 'Team standup meeting', status: 'completed', order: 2 },
-        { text: 'Work on new feature', status: 'in_progress', order: 3 },
-        { text: 'Code review session', status: 'todo', order: 4 },
+        { content: 'Review pull requests', symbol: 'complete', position: 0 },
+        { content: 'Update project documentation', symbol: 'bullet', position: 1 },
+        { content: 'Team standup meeting', symbol: 'complete', position: 2 },
+        { content: 'Work on new feature', symbol: 'bullet', position: 3 },
+        { content: 'Code review session', symbol: 'bullet', position: 4 },
+        { content: 'Plan sprint for next week', symbol: 'scheduled', position: 5 },
+        { content: 'Coffee chat with design team', symbol: 'event', position: 6 },
+        { content: 'Research new framework options', symbol: 'note', position: 7 },
       ];
 
       await prisma.task.createMany({
         data: sampleTasks.map(task => ({
           ...task,
           entryId: todayEntry.id,
-          userId: demoUser.id,
         }))
       });
 
@@ -116,7 +118,7 @@ async function seedDemo() {
     console.log(`✓ Created ${collections.length} sample collections`);
 
     // Create mood entries for the last 7 days
-    const moodValues = [4, 5, 3, 4, 5, 4, 5]; // Sample mood ratings (1-5)
+    const moodValues = ['good', 'amazing', 'okay', 'good', 'amazing', 'good', 'amazing'];
 
     for (let i = 0; i < 7; i++) {
       const date = new Date(today);
@@ -127,7 +129,7 @@ async function seedDemo() {
         data: {
           userId: demoUser.id,
           date: dateStr,
-          value: moodValues[i],
+          mood: moodValues[i],
           note: i === 0 ? 'Feeling productive today!' : null,
         }
       });

@@ -40,7 +40,7 @@ RUN apk add --no-cache sqlite
 
 ENV NODE_ENV=production
 ENV NEXT_TELEMETRY_DISABLED=1
-ENV DATABASE_URL="file:/app/data/selfjournal.db"
+ENV DATABASE_URL="file:/data/selfjournal.db"
 ENV AUTH_TRUST_HOST=true
 
 RUN addgroup --system --gid 1001 nodejs
@@ -69,7 +69,8 @@ COPY --chown=nextjs:nodejs docker-entrypoint.sh ./
 RUN chmod +x docker-entrypoint.sh
 
 # Create data directory for SQLite database
-RUN mkdir -p /app/data && chown -R nextjs:nodejs /app/data
+# Railway automatically persists /data directory
+RUN mkdir -p /data && chown -R nextjs:nodejs /data
 
 USER nextjs
 

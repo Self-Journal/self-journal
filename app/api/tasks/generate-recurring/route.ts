@@ -55,29 +55,24 @@ export async function POST(request: NextRequest) {
       // Check if task should appear on target date based on recurrence pattern
       switch (recurringTask.recurrencePattern) {
         case 'daily':
-          // Create every day after the original task date
-          shouldCreate = targetDate >= taskDate;
+          // Create every day (including the original date)
+          shouldCreate = true;
           break;
 
         case 'weekly':
-          // Create on the same day of week
-          const daysDiff = Math.floor((targetDate.getTime() - taskDate.getTime()) / (1000 * 60 * 60 * 24));
-          shouldCreate = daysDiff >= 0 && daysDiff % 7 === 0;
+          // Create on the same day of week every week
+          shouldCreate = targetDate.getDay() === taskDate.getDay();
           break;
 
         case 'monthly':
-          // Create on the same day of month
-          shouldCreate = targetDate >= taskDate &&
-                        targetDate.getDate() === taskDate.getDate() &&
-                        (targetDate.getMonth() !== taskDate.getMonth() || targetDate.getFullYear() !== taskDate.getFullYear());
+          // Create on the same day of month every month
+          shouldCreate = targetDate.getDate() === taskDate.getDate();
           break;
 
         case 'yearly':
           // Create on the same day and month each year
-          shouldCreate = targetDate >= taskDate &&
-                        targetDate.getDate() === taskDate.getDate() &&
-                        targetDate.getMonth() === taskDate.getMonth() &&
-                        targetDate.getFullYear() > taskDate.getFullYear();
+          shouldCreate = targetDate.getDate() === taskDate.getDate() &&
+                        targetDate.getMonth() === taskDate.getMonth();
           break;
       }
 

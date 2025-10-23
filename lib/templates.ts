@@ -22,7 +22,7 @@ export const challengeTemplates: ChallengeTemplate[] = [
     description: 'Build a consistent exercise habit with daily workouts',
     duration: 30,
     category: 'fitness',
-    icon: '=ª',
+    icon: '=ï¿½',
     tasks: [
       { content: '30 minutes of exercise', recurrence: 'daily' },
       { content: '10,000 steps', recurrence: 'daily' },
@@ -49,7 +49,7 @@ export const challengeTemplates: ChallengeTemplate[] = [
     description: 'Develop a daily meditation practice',
     duration: 21,
     category: 'mindfulness',
-    icon: '>Ø',
+    icon: '>ï¿½',
     tasks: [
       { content: '10 minutes morning meditation', recurrence: 'daily' },
       { content: '5 minutes evening reflection', recurrence: 'daily' },
@@ -62,7 +62,7 @@ export const challengeTemplates: ChallengeTemplate[] = [
     description: 'Code for at least 1 hour every day',
     duration: 100,
     category: 'learning',
-    icon: '=»',
+    icon: '=ï¿½',
     tasks: [
       { content: 'Code for 1 hour', recurrence: 'daily' },
       { content: 'Tweet progress #100DaysOfCode', recurrence: 'daily' },
@@ -75,7 +75,7 @@ export const challengeTemplates: ChallengeTemplate[] = [
     description: 'Read for at least 30 minutes every day',
     duration: 30,
     category: 'learning',
-    icon: '=Ú',
+    icon: '=ï¿½',
     tasks: [
       { content: 'Read for 30 minutes', recurrence: 'daily' },
       { content: 'Write book notes/summary', recurrence: 'weekly', dayOfWeek: 0 },
@@ -87,7 +87,7 @@ export const challengeTemplates: ChallengeTemplate[] = [
     description: 'Research shows it takes 66 days to form a new habit',
     duration: 66,
     category: 'habits',
-    icon: '<¯',
+    icon: '<ï¿½',
     tasks: [
       { content: 'Do your habit', recurrence: 'daily' },
       { content: 'Reflect on progress and challenges', recurrence: 'weekly', dayOfWeek: 0 },
@@ -99,7 +99,7 @@ export const challengeTemplates: ChallengeTemplate[] = [
     description: 'Drink 8 glasses of water daily',
     duration: 30,
     category: 'health',
-    icon: '=§',
+    icon: '=ï¿½',
     tasks: [
       { content: 'Drink 8 glasses of water', recurrence: 'daily' },
       { content: 'Track water intake', recurrence: 'daily' },
@@ -139,7 +139,7 @@ export const challengeTemplates: ChallengeTemplate[] = [
     category: 'mindfulness',
     icon: '=O',
     tasks: [
-      { content: 'List 3 things I\'m grateful for', recurrence: 'daily' },
+      { content: 'List 3 things I am grateful for', recurrence: 'daily' },
       { content: 'Send thank you message to someone', recurrence: 'daily' },
       { content: 'Evening gratitude reflection', recurrence: 'daily' },
     ],
@@ -156,10 +156,10 @@ export function getChallengeById(id: string) {
 
 export const categories = [
   { id: 'all', name: 'All', icon: '(' },
-  { id: 'fitness', name: 'Fitness', icon: '=ª' },
+  { id: 'fitness', name: 'Fitness', icon: '=ï¿½' },
   { id: 'health', name: 'Health', icon: '<N' },
-  { id: 'mindfulness', name: 'Mindfulness', icon: '>Ø' },
-  { id: 'learning', name: 'Learning', icon: '=Ú' },
+  { id: 'mindfulness', name: 'Mindfulness', icon: '>ï¿½' },
+  { id: 'learning', name: 'Learning', icon: '=ï¿½' },
   { id: 'productivity', name: 'Productivity', icon: '' },
-  { id: 'habits', name: 'Habits', icon: '<¯' },
+  { id: 'habits', name: 'Habits', icon: '<ï¿½' },
 ] as const;

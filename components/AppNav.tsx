@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
-import { Calendar, CalendarDays, CalendarRange, BookOpen, List, LogOut, BarChart3, Menu } from 'lucide-react';
+import { Calendar, CalendarDays, CalendarRange, BookOpen, List, LogOut, BarChart3, Menu, Sparkles } from 'lucide-react';
 
 export default function AppNav() {
   const pathname = usePathname();
@@ -18,6 +18,7 @@ export default function AppNav() {
     { href: '/weekly', label: 'Weekly', icon: CalendarDays },
     { href: '/monthly', label: 'Monthly', icon: CalendarRange },
     { href: '/collections', label: 'Collections', icon: BookOpen },
+    { href: '/templates', label: 'Templates', icon: Sparkles },
     { href: '/index', label: 'Index', icon: List },
   ];
 

@@ -54,3 +54,10 @@ next-env.d.ts
 *.db-wal
 
 /lib/generated/prisma
+
+# Logs
+/logs
+*.log
+
+# Temporary directories
+/selfjournal

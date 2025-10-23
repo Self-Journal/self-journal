@@ -4,13 +4,11 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import TaskList, { TaskSymbol } from '@/components/TaskList';
 import AppNav from '@/components/AppNav';
-import TemplateGallery from '@/components/TemplateGallery';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardHeader, CardContent, CardTitle, CardDescription } from '@/components/ui/card';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogFooter } from '@/components/ui/dialog';
-import { Plus, Trash2, Sparkles } from 'lucide-react';
-import { CollectionTemplate } from '@/lib/templates';
+import { Plus, Trash2 } from 'lucide-react';
 
 interface Collection {
   id: number;
@@ -31,7 +29,6 @@ export default function CollectionsPage() {
   const [selectedCollection, setSelectedCollection] = useState<Collection | null>(null);
   const [items, setItems] = useState<CollectionItem[]>([]);
   const [showNewCollectionDialog, setShowNewCollectionDialog] = useState(false);
-  const [showTemplateGallery, setShowTemplateGallery] = useState(false);
   const [newCollectionName, setNewCollectionName] = useState('');
   const [newCollectionDescription, setNewCollectionDescription] = useState('');
   const [loading, setLoading] = useState(true);
@@ -273,15 +270,6 @@ export default function CollectionsPage() {
                 <div className="flex items-center justify-between">
                   <CardTitle>Collections</CardTitle>
                   <div className="flex gap-2">
-                    <Button
-                      size="sm"
-                      variant="outline"
-                      className="gap-1"
-                      onClick={() => setShowTemplateGallery(true)}
-                    >
-                      <Sparkles className="h-4 w-4" />
-                      Template
-                    </Button>
                     <Dialog open={showNewCollectionDialog} onOpenChange={setShowNewCollectionDialog}>
                       <DialogTrigger asChild>
                         <Button size="sm" className="gap-1">

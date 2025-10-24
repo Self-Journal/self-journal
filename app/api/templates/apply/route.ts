@@ -2,7 +2,6 @@ import { NextRequest, NextResponse } from 'next/server';
 import { auth } from '@/lib/auth';
 import { taskOperations, entryOperations } from '@/lib/db';
 import { getChallengeById } from '@/lib/templates';
-import { format, addDays } from 'date-fns';
 
 export async function POST(request: NextRequest) {
   try {

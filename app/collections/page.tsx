@@ -195,53 +195,6 @@ export default function CollectionsPage() {
     }
   };
 
-  const handleTemplateSelect = async (template: CollectionTemplate, customName: string) => {
-    try {
-      // Create the collection
-      const response = await fetch('/api/collections', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          name: customName,
-          description: template.description,
-        }),
-      });
-      const { id } = await response.json();
-      const newCollection = {
-        id,
-        name: customName,
-        description: template.description,
-      };
-
-      // Add all template items in parallel
-      const itemPromises = template.items.map((item, i) =>
-        fetch('/api/collections/items', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            collectionId: id,
-            content: item.content,
-            symbol: item.symbol,
-            position: i,
-          }),
-        })
-      );
-
-      // Wait for all items to be created
-      await Promise.all(itemPromises);
-
-      // Update state and select the new collection
-      setCollections([newCollection, ...collections]);
-      setSelectedCollection(newCollection);
-
-      // Wait a bit before loading items to ensure DB has committed
-      setTimeout(() => {
-        loadCollectionItems(id);
-      }, 100);
-    } catch (error) {
-      console.error('Error creating collection from template:', error);
-    }
-  };
 
   if (loading) {
     return (
@@ -397,12 +350,6 @@ export default function CollectionsPage() {
           </div>
         </div>
 
-        {/* Template Gallery */}
-        <TemplateGallery
-          open={showTemplateGallery}
-          onOpenChange={setShowTemplateGallery}
-          onTemplateSelect={handleTemplateSelect}
-        />
       </main>
     </div>
   );

@@ -16,8 +16,42 @@ export async function middleware(request: NextRequest) {
     return NextResponse.next();
   }
 
-  // Production mode - enforce authentication
-  // For now, just allow everything (you can add auth logic here later)
+  // Production mode - check authentication and setup
+  const { pathname } = request.nextUrl;
+
+  // Public routes that don't require authentication
+  const publicRoutes = ['/login', '/register', '/setup', '/api/auth', '/api/setup', '/api/register'];
+  const isPublicRoute = publicRoutes.some(route => pathname.startsWith(route));
+
+  if (isPublicRoute) {
+    return NextResponse.next();
+  }
+
+  // Check if user is authenticated
+  const token = await getToken({ req: request, secret: process.env.NEXTAUTH_SECRET });
+
+  // If not authenticated, check if setup is needed
+  if (!token) {
+    // Check if any users exist by calling the setup API
+    try {
+      const setupCheck = await fetch(new URL('/api/setup', request.url).toString());
+      const { needsSetup } = await setupCheck.json();
+
+      if (needsSetup) {
+        // No users exist, redirect to setup
+        return NextResponse.redirect(new URL('/setup', request.url));
+      } else {
+        // Users exist but not logged in, redirect to login
+        return NextResponse.redirect(new URL('/login', request.url));
+      }
+    } catch (error) {
+      console.error('Middleware: Error checking setup:', error);
+      // On error, redirect to login
+      return NextResponse.redirect(new URL('/login', request.url));
+    }
+  }
+
+  // User is authenticated, allow access
   return NextResponse.next();
 }
 

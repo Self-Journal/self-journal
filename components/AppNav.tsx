@@ -2,14 +2,14 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-import { usePathname, useRouter } from 'next/navigation';
+import { usePathname } from 'next/navigation';
+import { signOut } from 'next-auth/react';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
 import { Calendar, CalendarDays, CalendarRange, List, LogOut, BarChart3, Menu, Sparkles } from 'lucide-react';
 
 export default function AppNav() {
   const pathname = usePathname();
-  const router = useRouter();
   const [isOpen, setIsOpen] = useState(false);
 
   const navItems = [
@@ -22,8 +22,7 @@ export default function AppNav() {
   ];
 
   const handleSignOut = async () => {
-    await fetch('/api/auth/signout', { method: 'POST' });
-    router.push('/login');
+    await signOut({ callbackUrl: '/login', redirect: true });
   };
 
   const closeSheet = () => setIsOpen(false);

@@ -57,9 +57,7 @@ export default function LoginPage() {
 
         if (!result?.error) {
           console.log('Auto-login successful, redirecting...');
-          setTimeout(() => {
-            window.location.href = '/daily';
-          }, 500);
+          window.location.href = '/daily';
         } else {
           console.error('Demo auto-login failed:', result.error);
           setLoading(false);
@@ -91,10 +89,8 @@ export default function LoginPage() {
         setError('Invalid username or password');
         setLoading(false);
       } else {
-        // Wait a bit for the session to be established, then redirect
-        setTimeout(() => {
-          window.location.href = '/daily';
-        }, 500);
+        // Redirect immediately - no middleware blocking now
+        window.location.href = '/daily';
       }
     } catch (err) {
       setError('An error occurred. Please try again.');

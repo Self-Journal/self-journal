@@ -91,10 +91,8 @@ export default function SetupPage() {
           setError('Account created but login failed. Please try logging in.');
           setLoading(false);
         } else {
-          // Wait for session to be established, then redirect
-          setTimeout(() => {
-            window.location.href = '/daily';
-          }, 500);
+          // Redirect immediately
+          window.location.href = '/daily';
         }
       }
     } catch (err) {

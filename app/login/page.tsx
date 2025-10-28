@@ -47,25 +47,20 @@ export default function LoginPage() {
 
       if (data.isDemoMode) {
         console.log('Demo mode enabled, attempting auto-login...');
-        // Auto-login with demo credentials
         setLoading(true);
-        const result = await signIn('credentials', {
+
+        // Auto-login with demo credentials using redirect
+        await signIn('credentials', {
           username: 'demo',
           password: 'demo123',
-          redirect: false,
+          callbackUrl: '/daily',
+          redirect: true,
         });
 
-        console.log('Sign in result:', result);
-
-        if (!result?.error) {
-          console.log('Auto-login successful, redirecting...');
-          // Force full page reload to ensure session is loaded
-          window.location.href = '/daily';
-        } else {
-          console.error('Demo auto-login failed:', result.error);
-          setLoading(false);
-          setChecking(false);
-        }
+        // If we reach here, there was an error (redirect failed)
+        console.error('Demo auto-login failed');
+        setLoading(false);
+        setChecking(false);
       } else {
         console.log('Demo mode disabled');
         setChecking(false);
@@ -85,18 +80,18 @@ export default function LoginPage() {
       const result = await signIn('credentials', {
         username,
         password,
-        redirect: false,
+        callbackUrl: '/daily',
+        redirect: true,
       });
 
+      // If redirect is true, NextAuth will handle the redirect automatically
+      // This code won't run on success, but will run if there's an error
       if (result?.error) {
         setError('Invalid username or password');
-      } else {
-        // Force full page reload to ensure session is loaded
-        window.location.href = '/daily';
+        setLoading(false);
       }
     } catch (err) {
       setError('An error occurred. Please try again.');
-    } finally {
       setLoading(false);
     }
   };

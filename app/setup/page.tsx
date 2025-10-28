@@ -80,20 +80,17 @@ export default function SetupPage() {
         setError(data.error || 'Registration failed');
         setLoading(false);
       } else {
-        // Auto login after registration
-        const result = await signIn('credentials', {
+        // Auto login after registration with redirect
+        await signIn('credentials', {
           username,
           password,
-          redirect: false,
+          callbackUrl: '/daily',
+          redirect: true,
         });
 
-        if (result?.error) {
-          setError('Account created but login failed. Please try logging in.');
-          setLoading(false);
-        } else {
-          // Force full page reload to ensure session is loaded
-          window.location.href = '/daily';
-        }
+        // If we reach here, there was an error
+        setError('Account created but login failed. Please try logging in.');
+        setLoading(false);
       }
     } catch (err) {
       setError('An error occurred. Please try again.');

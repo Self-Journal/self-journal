@@ -2,6 +2,9 @@ import NextAuth from 'next-auth';
 import CredentialsProvider from 'next-auth/providers/credentials';
 import { userOperations } from './db';
 
+console.log('NextAuth Config - NEXTAUTH_URL:', process.env.NEXTAUTH_URL);
+console.log('NextAuth Config - NEXTAUTH_SECRET:', process.env.NEXTAUTH_SECRET ? 'SET' : 'NOT SET');
+
 export const { handlers, signIn, signOut, auth } = NextAuth({
   trustHost: true,
   providers: [
@@ -63,6 +66,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
   callbacks: {
     async jwt({ token, user }) {
       if (user) {
+        console.log('Auth: JWT callback - setting token.id:', user.id);
         token.id = user.id;
       }
       return token;

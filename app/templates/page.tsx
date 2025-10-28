@@ -60,7 +60,7 @@ export default function TemplatesPage() {
   };
 
   return (
-    <AppLayout>
+    <AppLayout showSidebar={false}>
       <div className="container max-w-5xl mx-auto py-8 px-4">
         {/* Header */}
         <div className="mb-8">

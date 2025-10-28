@@ -49,18 +49,22 @@ export default function LoginPage() {
         console.log('Demo mode enabled, attempting auto-login...');
         setLoading(true);
 
-        // Auto-login with demo credentials using redirect
-        await signIn('credentials', {
+        const result = await signIn('credentials', {
           username: 'demo',
           password: 'demo123',
-          callbackUrl: '/daily',
-          redirect: true,
+          redirect: false,
         });
 
-        // If we reach here, there was an error (redirect failed)
-        console.error('Demo auto-login failed');
-        setLoading(false);
-        setChecking(false);
+        if (!result?.error) {
+          console.log('Auto-login successful, redirecting...');
+          setTimeout(() => {
+            window.location.href = '/daily';
+          }, 500);
+        } else {
+          console.error('Demo auto-login failed:', result.error);
+          setLoading(false);
+          setChecking(false);
+        }
       } else {
         console.log('Demo mode disabled');
         setChecking(false);
@@ -77,18 +81,21 @@ export default function LoginPage() {
     setLoading(true);
 
     try {
-      // With redirect: true, NextAuth will automatically redirect on success
-      // This function will only return if there's an error
-      await signIn('credentials', {
+      const result = await signIn('credentials', {
         username,
         password,
-        callbackUrl: '/daily',
-        redirect: true,
+        redirect: false,
       });
 
-      // If we reach here, there was an error (no redirect happened)
-      setError('Invalid username or password');
-      setLoading(false);
+      if (result?.error) {
+        setError('Invalid username or password');
+        setLoading(false);
+      } else {
+        // Wait a bit for the session to be established, then redirect
+        setTimeout(() => {
+          window.location.href = '/daily';
+        }, 500);
+      }
     } catch (err) {
       setError('An error occurred. Please try again.');
       setLoading(false);

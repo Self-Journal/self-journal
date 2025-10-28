@@ -77,19 +77,18 @@ export default function LoginPage() {
     setLoading(true);
 
     try {
-      const result = await signIn('credentials', {
+      // With redirect: true, NextAuth will automatically redirect on success
+      // This function will only return if there's an error
+      await signIn('credentials', {
         username,
         password,
         callbackUrl: '/daily',
         redirect: true,
       });
 
-      // If redirect is true, NextAuth will handle the redirect automatically
-      // This code won't run on success, but will run if there's an error
-      if (result?.error) {
-        setError('Invalid username or password');
-        setLoading(false);
-      }
+      // If we reach here, there was an error (no redirect happened)
+      setError('Invalid username or password');
+      setLoading(false);
     } catch (err) {
       setError('An error occurred. Please try again.');
       setLoading(false);

@@ -29,7 +29,10 @@ else
   echo "Database exists at $DB_FILE"
 
   # Check if tables exist
-  TABLES_COUNT=$(sqlite3 "$DB_FILE" "SELECT count(*) FROM sqlite_master WHERE type='table' AND name='User';" 2>/dev/null || echo "0")
+  # TABLES_COUNT=$(sqlite3 "$DB_FILE" "SELECT count(*) FROM sqlite_master WHERE type='table' AND name='User';" 2>/dev/null || echo "0")
+
+  # fixed
+  TABLES_COUNT=$(sqlite3 "$DB_FILE" "SELECT count(*) FROM sqlite_master WHERE type='table' AND name='users';" 2>/dev/null || echo "0")
 
   if [ "$TABLES_COUNT" = "0" ]; then
     echo "⚠ Database file exists but tables are missing!"
